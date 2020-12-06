@@ -2,6 +2,7 @@ package com.course.dao;
 
 
 import com.course.entity.User;
+import com.course.model.UserModel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,26 +12,57 @@ public class UserDao {
     private static String username = "admin";
     private static String password = "admin";
 
-    public static ArrayList<User> select(int id)
+    public static User select(UserModel model) {
+        ArrayList<User> users = new ArrayList<User>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String sql = "SELECT * FROM user WHERE login = ? AND password = ?";
+                PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setString(1, model.getLogin());
+                preparedStatement.setString(2, model.getPassword());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                ParseResultSet(users, resultSet);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        if (users.size() != 0) {
+            return users.get(0);
+        }
+        else {
+            return null;
+        }
+    }
+
+    public static boolean userExists(UserModel user)
     {
         ArrayList<User> users = new ArrayList<User>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            try (Connection conn = DriverManager.getConnection(url, username, password)){
-                String sql = "SELECT * FROM user WHERE id = ?";
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String sql = "SELECT * FROM user WHERE login = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setInt(1,id);
+                preparedStatement.setString(1, user.getLogin());
                 ResultSet resultSet = preparedStatement.executeQuery();
                 ParseResultSet(users, resultSet);
             }
+
+            if (users.size() != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        catch(Exception ex){
+        catch (Exception ex) {
             System.out.println(ex);
         }
 
-        return users;
+        return false;
     }
-
 
     public static ArrayList<User> select() {
 

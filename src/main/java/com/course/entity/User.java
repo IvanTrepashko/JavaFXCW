@@ -1,6 +1,10 @@
 package com.course.entity;
 
-public class User {
+import java.io.Serializable;
+import java.nio.charset.Charset;
+import java.util.Random;
+
+public class User implements Serializable {
     private int id;
     private String login;
     private String password;
@@ -8,7 +12,17 @@ public class User {
     private boolean isAdmin;
 
     public static String GenerateGroupCode() {
-        return null;
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 6;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
     }
 
     public User(String login, String password) {
