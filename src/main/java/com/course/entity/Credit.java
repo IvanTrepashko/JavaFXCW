@@ -1,8 +1,9 @@
 package com.course.entity;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Credit {
+public class Credit implements Serializable {
     private int id;
     private double totalMoneyAmount;
     private double remainingAmount;
@@ -10,6 +11,17 @@ public class Credit {
     private Date loanDate;
     private Date repaymentDate;
     private String groupId;
+
+    public Credit(Credit that)
+    {
+        this.id = that.id;
+        this.totalMoneyAmount = that.totalMoneyAmount;
+        this.remainingAmount = that.remainingAmount;
+        this.interestRate = that.interestRate;
+        this.loanDate = that.loanDate;
+        this.repaymentDate = that.repaymentDate;
+        this.groupId = that.groupId;
+    }
 
     public Credit(int id, double totalMoneyAmount, double remainingAmount, double interestRate,
                   Date loanDate, Date repaymentDate, String groupId) {

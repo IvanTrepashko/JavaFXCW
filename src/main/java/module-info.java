@@ -5,6 +5,7 @@ module com.course {
 
     opens com.course to javafx.fxml;
     opens com.course.client.controller to javafx.fxml;
+    opens com.course.entity to javafx.base;
 
     exports com.course;
     exports com.course.server.controller;

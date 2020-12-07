@@ -1,5 +1,7 @@
 package com.course.client;
 
+import com.course.entity.User;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,6 +16,18 @@ public class ClientConnection {
     private ObjectInputStream inStream;
 
     private String message;
+
+    private User currentUser;
+
+    public User getCurrentUser()
+    {
+        return currentUser;
+    }
+
+    public void setCurrentUser(User user)
+    {
+        this.currentUser = user;
+    }
 
     public static ClientConnection getInstance()
     {
@@ -45,9 +59,19 @@ public class ClientConnection {
 
     public void sendObject(Object object){
         try {
+
             outStream.writeObject(object);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void resetOutputStream() {
+        try {
+            this.outStream.reset();
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
         }
     }
 

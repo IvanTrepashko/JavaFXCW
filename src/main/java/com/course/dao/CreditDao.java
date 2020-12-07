@@ -10,15 +10,15 @@ public class CreditDao {
     private static String username = "admin";
     private static String password = "admin";
 
-    public static ArrayList<Credit> select(int id)
+    public static ArrayList<Credit> select(String groupCode)
     {
         ArrayList<Credit> records = new ArrayList<Credit>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
-                String sql = "SELECT * FROM credit WHERE id = ?";
+                String sql = "SELECT * FROM credit WHERE groupCode = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setInt(1,id);
+                preparedStatement.setString(1, groupCode);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 ParseResultSet(records, resultSet);
             }

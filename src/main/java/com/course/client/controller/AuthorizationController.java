@@ -52,6 +52,7 @@ public class AuthorizationController {
                 }
                 else {
                     User user = (User) clientConnection.readObject();
+                    ClientConnection.getInstance().setCurrentUser(user);
                     passwordField.getScene().getWindow().hide();
                     if (user.isAdmin()) {
                         PageManager.goToPage("main_admin.fxml");
