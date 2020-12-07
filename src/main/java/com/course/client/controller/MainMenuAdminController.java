@@ -1,5 +1,6 @@
 package com.course.client.controller;
 
+import com.course.PageManager;
 import com.course.client.ClientConnection;
 import com.course.entity.Credit;
 import javafx.collections.FXCollections;
@@ -23,6 +24,7 @@ public class MainMenuAdminController {
     public Button saveChangesCreditsButton;
     public Button addNewCreditButton;
     public Button deleteCreditsButton;
+    public Button updateCreditsButton;
 
 
     // TABS
@@ -122,6 +124,7 @@ public class MainMenuAdminController {
 
         ArrayList<Credit> creditsList = (ArrayList<Credit>)clientConnection.readObject();
 
+        credits.removeAll();
         credits.addAll(creditsList);
 
         creditTable.setItems(credits);
@@ -199,8 +202,7 @@ public class MainMenuAdminController {
         addNewCreditButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.out.println("Worked");
-
+                PageManager.goToPage("add_credit.fxml");
             }
         });
 
@@ -232,6 +234,27 @@ public class MainMenuAdminController {
                 for (Credit credit:selectedCredits ) {
                     allCredits.remove(credit);
                 }
+
+                Credit credit = selectedCredits.get(0);
+
+                ClientConnection clientConnection = ClientConnection.getInstance();
+                clientConnection.sendMessage("DeleteDataController");
+                clientConnection.sendMessage("DeleteCredit");
+                clientConnection.sendObject(credit);
+            }
+        });
+
+        updateCreditsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ClientConnection clientConnection = ClientConnection.getInstance();
+                clientConnection.sendMessage("DataLoaderController");
+                clientConnection.sendMessage("CreditsByGroupCode");
+                clientConnection.sendMessage(ClientConnection.getInstance().getCurrentUser().getGroupCode());
+
+                ArrayList<Credit> creditsList = (ArrayList<Credit>)clientConnection.readObject();
+                credits.setAll(creditsList);
+                creditTable.setItems(credits);
             }
         });
     }

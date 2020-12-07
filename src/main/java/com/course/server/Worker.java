@@ -1,8 +1,6 @@
 package com.course.server;
 
-import com.course.server.controller.AuthorizationController;
-import com.course.server.controller.DataChangerController;
-import com.course.server.controller.DataLoaderController;
+import com.course.server.controller.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -42,6 +40,13 @@ public class Worker implements Runnable {
                     case "DataChangerController":{
                         DataChangerController.performAction(action, sois, soos);
                         break;
+                    }
+                    case "InsertDataController": {
+                        InsertDataController.performAction(action, sois, soos);
+                        break;
+                    }
+                    case "DeleteDataController": {
+                        DeleteDataController.performAction(action, sois, soos);
                     }
                 }
             }

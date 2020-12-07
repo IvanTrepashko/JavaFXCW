@@ -50,6 +50,7 @@
                         <Button fx:id="addNewCreditButton" layoutX="8.0" layoutY="309.0" mnemonicParsing="false" text="Добавить новый кредит" />
                         <Button fx:id="saveChangesCreditsButton" layoutX="166.0" layoutY="309.0" mnemonicParsing="false" text="Сохранить изменения" />
                         <Button fx:id="deleteCreditsButton" layoutX="312.0" layoutY="309.0" mnemonicParsing="false" text="Удалить выбранный" />
+                        <Button fx:id="updateCreditsButton" layoutX="449.0" layoutY="309.0" mnemonicParsing="false" text="Обновить данные" />
                      </children></AnchorPane>
             </content>
           </Tab>
