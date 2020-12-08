@@ -84,7 +84,7 @@
                            </columns>
                         </TableView>
                         <Button fx:id="addNewUserButton" layoutX="4.0" layoutY="316.0" mnemonicParsing="false" text="Добавить пользователя" />
-                        <TextField editable="false" layoutX="455.0" layoutY="316.0" prefHeight="25.0" prefWidth="100.0" />
+                        <TextField fx:id="groupCode" editable="false" layoutX="455.0" layoutY="316.0" prefHeight="25.0" prefWidth="100.0" />
                         <Text layoutX="380.0" layoutY="333.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Код доступа" />
                      </children></AnchorPane>
               </content>
@@ -93,12 +93,11 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView layoutX="4.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
+                        <TableView fx:id="mySpendingTable" layoutX="4.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
                            <columns>
-                              <TableColumn prefWidth="78.0" text="id" />
-                              <TableColumn prefWidth="194.0" text="Сумма" />
-                              <TableColumn prefWidth="143.0" text="Дата" />
-                              <TableColumn prefWidth="143.0" text="Категория" />
+                              <TableColumn fx:id="mySpendingAmount" prefWidth="194.0" text="Сумма" />
+                              <TableColumn fx:id="mySpendingDate" prefWidth="143.0" text="Дата" />
+                              <TableColumn fx:id="mySpendingCategory" prefWidth="143.0" text="Категория" />
                            </columns>
                         </TableView>
                         <Button layoutX="4.0" layoutY="315.0" mnemonicParsing="false" text="Добавить " />
@@ -109,13 +108,12 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView editable="true" layoutX="4.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
+                        <TableView fx:id="allSpendingTable" editable="true" layoutX="4.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
                            <columns>
-                              <TableColumn prefWidth="52.0" text="id" />
-                              <TableColumn prefWidth="116.0" text="Сумма" />
-                              <TableColumn prefWidth="96.0" text="Дата" />
-                              <TableColumn prefWidth="118.0" text="Категория" />
-                              <TableColumn prefWidth="178.0" text="Логин пользователя" />
+                              <TableColumn fx:id="allSpendingMoney" prefWidth="116.0" text="Сумма" />
+                              <TableColumn fx:id="allSpendingDate" prefWidth="96.0" text="Дата" />
+                              <TableColumn fx:id="allSpendingCategory" prefWidth="118.0" text="Категория" />
+                              <TableColumn fx:id="allSpendingUserLogin" prefWidth="178.0" text="Логин пользователя" />
                            </columns>
                         </TableView>
                         <TextField editable="false" layoutX="450.0" layoutY="316.0" prefHeight="25.0" prefWidth="89.0" />

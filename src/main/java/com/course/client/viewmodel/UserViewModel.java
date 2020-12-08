@@ -2,7 +2,9 @@ package com.course.client.viewmodel;
 
 import com.course.entity.User;
 
-public class UserViewModel {
+import java.io.Serializable;
+
+public class UserViewModel implements Serializable {
     private int id;
     private String login;
     private double totalSpendings;

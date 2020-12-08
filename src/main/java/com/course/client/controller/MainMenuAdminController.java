@@ -2,9 +2,11 @@ package com.course.client.controller;
 
 import com.course.PageManager;
 import com.course.client.ClientConnection;
+import com.course.client.viewmodel.SpendingViewModel;
 import com.course.client.viewmodel.UserViewModel;
 import com.course.entity.Credit;
 import com.course.entity.Deposit;
+import com.course.entity.Spending;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,7 +31,6 @@ public class MainMenuAdminController {
     public Button deleteCreditsButton;
     public Button updateCreditsButton;
 
-
     // DEPOSIT BUTTONS
     public Button addNewDepositButton;
     public Button saveChangesDepositButton;
@@ -38,7 +39,7 @@ public class MainMenuAdminController {
 
     //USER BUTTONS
     public Button addNewUserButton;
-
+    public TextField groupCode;
 
     // TABS
     @FXML
@@ -61,12 +62,24 @@ public class MainMenuAdminController {
     private TableView<Deposit> depositTable;
     @FXML
     private TableView<UserViewModel> userTable;
+    @FXML
+    private TableView<Spending> mySpendingTable;
+    @FXML
+    private TableView<SpendingViewModel> allSpendingTable;
+
 //    @FXML
-//    private TableView<Credit> creditTable;
-//    @FXML
-//    private TableView<Credit> creditTable;
-//    @FXML
-//    private TableView<Credit> creditTable;
+//    private TableView<BudgetPlan> budgetPlanTable;
+
+    // ALL SPENDING COLUMNS
+    public TableColumn allSpendingMoney;
+    public TableColumn allSpendingDate;
+    public TableColumn allSpendingCategory;
+    public TableColumn allSpendingUserLogin;
+
+    // MY SPENDINGS TABLE COLUMNS
+    public TableColumn mySpendingAmount;
+    public TableColumn mySpendingDate;
+    public TableColumn mySpendingCategory;
 
     // USER TABLE COLUMNS
     @FXML
@@ -108,19 +121,81 @@ public class MainMenuAdminController {
     private ObservableList<UserViewModel> users = FXCollections.observableArrayList();
 
     @FXML
+    private ObservableList<Spending> spendings = FXCollections.observableArrayList();
+
+    @FXML
+    private ObservableList<SpendingViewModel> allSpendings = FXCollections.observableArrayList();
+
+    @FXML
     void initialize()
     {
         loadCredits();
         loadDeposits();
         loadUsers();
+        loadSpendings();
+        loadAllSpendings();
+    }
+
+    private void loadAllSpendings() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
+
+        allSpendingMoney.setCellValueFactory(new PropertyValueFactory<SpendingViewModel, String>("totalMoneyAmount"));
+
+        allSpendingDate.setCellValueFactory(new PropertyValueFactory<SpendingViewModel, String>("date"));
+
+        allSpendingCategory.setCellValueFactory(new PropertyValueFactory<SpendingViewModel, String>("categoryStringModel"));
+
+        allSpendingUserLogin.setCellValueFactory(new PropertyValueFactory<SpendingViewModel, String>("userLogin"));
+
+        clientConnection.sendMessage("DataLoaderController");
+        clientConnection.sendMessage("SpendingsByGroupCode");
+        clientConnection.sendObject(clientConnection.getCurrentUser().getGroupCode());
+
+        ArrayList<SpendingViewModel> spendingsList = (ArrayList<SpendingViewModel>)clientConnection.readObject();
+
+        allSpendings.removeAll();
+        allSpendings.addAll(spendingsList);
+        allSpendingTable.setItems(allSpendings);
+
+        loadAllSpendingsButtons();
+    }
+
+    private void loadAllSpendingsButtons() {
+
+    }
+
+    private void loadSpendings() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
+
+        mySpendingAmount.setCellValueFactory(new PropertyValueFactory<Spending, String>("moneyAmount"));
+
+        mySpendingDate.setCellValueFactory(new PropertyValueFactory<Spending, String>("date"));
+
+        mySpendingCategory.setCellValueFactory(new PropertyValueFactory<Spending, String>("categoryString"));
+
+        clientConnection.sendMessage("DataLoaderController");
+        clientConnection.sendMessage("SpendingsByUserId");
+        clientConnection.sendObject(clientConnection.getCurrentUser().getId());
+
+        ArrayList<Spending> spendingsList = (ArrayList<Spending>)clientConnection.readObject();
+
+        spendings.removeAll();
+        spendings.addAll(spendingsList);
+        mySpendingTable.setItems(spendings);
+
+        loadMySpendingButtons();
+    }
+
+    private void loadMySpendingButtons() {
+
     }
 
     private void loadUsers() {
         ClientConnection clientConnection = ClientConnection.getInstance();
 
-        userLogin.setCellValueFactory(new PropertyValueFactory<Credit, String>("login"));
+        userLogin.setCellValueFactory(new PropertyValueFactory<UserViewModel, String>("login"));
 
-        userTotalSpendings.setCellValueFactory(new PropertyValueFactory<Credit, String>("totalSpendings"));
+        userTotalSpendings.setCellValueFactory(new PropertyValueFactory<UserViewModel, String>("totalSpendings"));
 
         clientConnection.sendMessage("DataLoaderController");
         clientConnection.sendMessage("UsersByGroupCode");
@@ -133,6 +208,8 @@ public class MainMenuAdminController {
 
         userTable.setItems(users);
 
+        groupCode.setText(clientConnection.getCurrentUser().getGroupCode());
+
         loadUserButtons();
     }
 
@@ -143,19 +220,19 @@ public class MainMenuAdminController {
     private void loadDeposits() {
         ClientConnection clientConnection = ClientConnection.getInstance();
 
-        initialMoney.setCellValueFactory(new PropertyValueFactory<Credit, String>("initialMoney"));
+        initialMoney.setCellValueFactory(new PropertyValueFactory<Deposit, String>("initialMoney"));
         initialMoney.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
-        currentMoney.setCellValueFactory(new PropertyValueFactory<Credit, String>("currentMoney"));
+        currentMoney.setCellValueFactory(new PropertyValueFactory<Deposit, String>("currentMoney"));
         currentMoney.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
-        depositInterestRate.setCellValueFactory(new PropertyValueFactory<Credit, String>("interestRate"));
+        depositInterestRate.setCellValueFactory(new PropertyValueFactory<Deposit, String>("interestRate"));
         depositInterestRate.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
 
-        initialDate.setCellValueFactory(new PropertyValueFactory<Credit, String>("initialDate"));
+        initialDate.setCellValueFactory(new PropertyValueFactory<Deposit, String>("initialDate"));
         initialDate.setCellFactory(TextFieldTableCell.forTableColumn(new DateStringConverter()));
 
-        expirationDate.setCellValueFactory(new PropertyValueFactory<Credit, String>("expirationDate"));
+        expirationDate.setCellValueFactory(new PropertyValueFactory<Deposit, String>("expirationDate"));
         expirationDate.setCellFactory(TextFieldTableCell.forTableColumn(new DateStringConverter()));
 
         clientConnection.sendMessage("DataLoaderController");

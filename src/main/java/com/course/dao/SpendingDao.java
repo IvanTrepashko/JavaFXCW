@@ -1,6 +1,7 @@
 package com.course.dao;
 
 
+import com.course.client.viewmodel.SpendingViewModel;
 import com.course.entity.Spending;
 import com.course.entity.SpendingCategory;
 
@@ -12,15 +13,44 @@ public class SpendingDao {
     private static String username = "admin";
     private static String password = "admin";
 
-    public static ArrayList<Spending> select(int id)
+    public static ArrayList<SpendingViewModel> select(String groupCode)
+    {
+        ArrayList<SpendingViewModel> spendigs = new ArrayList<SpendingViewModel>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = DriverManager.getConnection(url, username, password)){
+                String sql = "SELECT sp.moneyAmount, sp.date, sp.category, us.login FROM spending sp, user us WHERE sp.groupCode = ? AND sp.user_id = us.id";
+                PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setString(1, groupCode);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    double money = resultSet.getDouble(1);
+                    Date date = resultSet.getDate(2);
+                    int category = resultSet.getInt(3);
+                    SpendingCategory cat = SpendingCategory.values()[category - 1];
+                    String stringCategory = Spending.parseCategoryString(cat);
+                    String login = resultSet.getString(4);
+
+                    SpendingViewModel spending = new SpendingViewModel(money, date, stringCategory, login);
+                    spendigs.add(spending);
+                }
+            }
+        }
+        catch(Exception ex){
+            System.out.println(ex);
+        }
+        return spendigs;
+    }
+
+    public static ArrayList<Spending> select(int user_id)
     {
         ArrayList<Spending> spendings = new ArrayList<Spending>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
-                String sql = "SELECT * FROM spending WHERE id = ?";
+                String sql = "SELECT * FROM spending WHERE user_id = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setInt(1,id);
+                preparedStatement.setInt(1, user_id);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 ParseResultSet(spendings, resultSet);
             }
@@ -36,12 +66,14 @@ public class SpendingDao {
         double result = 0;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            try (Connection conn = DriverManager.getConnection(url, username, password)){
-                String sql = "SELECT SUM(moneyAmount) FROM spending WHERE userId = ?";
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String sql = "SELECT SUM(moneyAmount) FROM spending WHERE user_id = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setInt(1,userId);
+                preparedStatement.setInt(1, userId);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                result = resultSet.getDouble(1);
+                while (resultSet.next()) {
+                    result = resultSet.getDouble(1);
+                }
             }
         }
         catch(Exception ex){

@@ -1,5 +1,6 @@
 package com.course.server.controller;
 
+import com.course.client.viewmodel.SpendingViewModel;
 import com.course.client.viewmodel.UserViewModel;
 import com.course.dao.CreditDao;
 import com.course.dao.DepositDao;
@@ -47,6 +48,19 @@ public class DataLoaderController {
                     }
 
                     soos.writeObject(userViewModels);
+                    break;
+                }
+                case "SpendingsByUserId":
+                {
+                    int userId = Integer.parseInt(parameter);
+                    ArrayList<Spending> spendings = SpendingDao.select(userId);
+                    soos.writeObject(spendings);
+                    break;
+                }
+                case "SpendingsByGroupCode":
+                {
+                    ArrayList<SpendingViewModel> spendings = SpendingDao.select(parameter);
+                    soos.writeObject(spendings);
                     break;
                 }
             }
