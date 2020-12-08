@@ -32,6 +32,24 @@ public class SpendingDao {
         return spendings;
     }
 
+    public static double selectTotalMoney(int userId){
+        double result = 0;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = DriverManager.getConnection(url, username, password)){
+                String sql = "SELECT SUM(moneyAmount) FROM spending WHERE userId = ?";
+                PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setInt(1,userId);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                result = resultSet.getDouble(1);
+            }
+        }
+        catch(Exception ex){
+            System.out.println(ex);
+        }
+        return result;
+    }
+
     public static ArrayList<Spending> select() {
 
         ArrayList<Spending> spendings = new ArrayList<Spending>();
@@ -56,7 +74,7 @@ public class SpendingDao {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
 
-                String sql = "INSERT INTO spending (moneyAmount, date, category, groupCode) Values (?,?,?,?)";
+                String sql = "INSERT INTO spending (moneyAmount, date, category, groupCode, user_id) Values (?,?,?,?,?)";
                 PreparedStatement preparedStatement = SetQueryValues(spending, conn, sql);
                 preparedStatement.execute();
             }
@@ -73,9 +91,9 @@ public class SpendingDao {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
 
-                String sql = "UPDATE spending SET  moneyAmount = ?, date = ?, category = ?, groupCode = ? WHERE id = ?";
+                String sql = "UPDATE spending SET  moneyAmount = ?, date = ?, category = ?, groupCode = ?, user_id = ? WHERE id = ?";
                 PreparedStatement preparedStatement = SetQueryValues(spending, conn, sql);
-                preparedStatement.setInt(5,spending.getId());
+                preparedStatement.setInt(6,spending.getId());
                 preparedStatement.executeUpdate();
             }
         }
@@ -110,6 +128,7 @@ public class SpendingDao {
         preparedStatement.setDate(2, spending.getDate());
         preparedStatement.setInt(3, spending.getCategory().ordinal());
         preparedStatement.setString(4, spending.getGroupCode());
+        preparedStatement.setInt(5, spending.getUserId());
 
         return  preparedStatement;
     }
@@ -120,8 +139,9 @@ public class SpendingDao {
             double moneyAmount = resultSet.getDouble(2);
             Date date = resultSet.getDate(3);
             SpendingCategory spendingCategory = SpendingCategory.valueOf(resultSet.getInt(4));
-            String groupCode = resultSet.getString(8);
-            Spending spending = new Spending(id, moneyAmount, date, spendingCategory, groupCode);
+            String groupCode = resultSet.getString(5);
+            int userId = resultSet.getInt(6);
+            Spending spending = new Spending(id, moneyAmount, date, spendingCategory, groupCode, userId);
 
             spendings.add(spending);
         }

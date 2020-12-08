@@ -1,31 +1,28 @@
 package com.course.entity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum CapitalizationType {
-    NO(1),
-    MONTHLY(2),
-    YEARLY(3);
+    NO("NO"),
+    MONTHLY("MONTHLY"),
+    YEARLY("YEARLY");
 
-    private int value;
-    private static Map map = new HashMap<>();
+    private final String value;
 
-    private CapitalizationType(int value) {
-        this.value = value;
+    CapitalizationType(String url) {
+        this.value = url;
     }
 
-    static {
-        for (CapitalizationType pageType : CapitalizationType.values()) {
-            map.put(pageType.value, pageType);
+    public String getType() {
+        switch (value) {
+            case "NO" : {
+                return "Нет";
+            }
+            case "MONTHLY": {
+                return "Месячная";
+            }
+            case "YEARLY": {
+                return "Годовая";
+            }
         }
-    }
-
-    public static CapitalizationType valueOf(int pageType) {
-        return (CapitalizationType) map.get(pageType);
-    }
-
-    public int getValue() {
-        return value;
+        return null;
     }
 }

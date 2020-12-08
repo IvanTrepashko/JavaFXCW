@@ -8,17 +8,27 @@ public class Spending {
     private Date date;
     private SpendingCategory category;
     private String groupCode;
+    private int userId;
 
     public Spending() {
 
     }
 
-    public Spending(int id, double moneyAmount, Date date, SpendingCategory category, String groupCode) {
+    public Spending(int id, double moneyAmount, Date date, SpendingCategory category, String groupCode, int userId) {
         this.moneyAmount = moneyAmount;
         this.date = date;
         this.category = category;
         this.id = id;
         this.groupCode = groupCode;
+        this.userId = userId;
+    }
+
+    public void setUserId(int userId){
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return this.userId;
     }
 
     public void setId(int id) {
@@ -47,6 +57,6 @@ public class Spending {
 
     public static void ChooseCategory()
     {
-
+        
     }
 }

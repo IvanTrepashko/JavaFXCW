@@ -1,7 +1,9 @@
 package com.course.server.controller;
 
 import com.course.dao.CreditDao;
+import com.course.dao.DepositDao;
 import com.course.entity.Credit;
+import com.course.entity.Deposit;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,6 +16,12 @@ public class DeleteDataController {
                 case "DeleteCredit": {
                     Credit credit = (Credit)sois.readObject();
                     CreditDao.delete(credit.getId());
+                    break;
+                }
+                case "DeleteDeposit": {
+                    Deposit deposit = (Deposit)sois.readObject();
+                    DepositDao.delete(deposit.getId());
+                    break;
                 }
             }
         }

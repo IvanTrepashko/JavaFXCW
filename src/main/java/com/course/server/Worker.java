@@ -47,6 +47,7 @@ public class Worker implements Runnable {
                     }
                     case "DeleteDataController": {
                         DeleteDataController.performAction(action, sois, soos);
+                        break;
                     }
                 }
             }

@@ -2,7 +2,9 @@ package com.course.client.controller;
 
 import com.course.PageManager;
 import com.course.client.ClientConnection;
+import com.course.client.viewmodel.UserViewModel;
 import com.course.entity.Credit;
+import com.course.entity.Deposit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,11 +22,22 @@ import java.util.ArrayList;
 
 public class MainMenuAdminController {
 
+    // CREDIT BUTTONS
     @FXML
     public Button saveChangesCreditsButton;
     public Button addNewCreditButton;
     public Button deleteCreditsButton;
     public Button updateCreditsButton;
+
+
+    // DEPOSIT BUTTONS
+    public Button addNewDepositButton;
+    public Button saveChangesDepositButton;
+    public Button deleteDepositButton;
+    public Button updateDepositsButton;
+
+    //USER BUTTONS
+    public Button addNewUserButton;
 
 
     // TABS
@@ -44,10 +57,10 @@ public class MainMenuAdminController {
     // TABLES
     @FXML
     private TableView<Credit> creditTable;
-//    @FXML
-//    private TableView<Credit> creditTable;
-//    @FXML
-//    private TableView<Credit> creditTable;
+    @FXML
+    private TableView<Deposit> depositTable;
+    @FXML
+    private TableView<UserViewModel> userTable;
 //    @FXML
 //    private TableView<Credit> creditTable;
 //    @FXML
@@ -55,10 +68,13 @@ public class MainMenuAdminController {
 //    @FXML
 //    private TableView<Credit> creditTable;
 
+    // USER TABLE COLUMNS
+    @FXML
+    private TableColumn userLogin;
+    @FXML
+    private TableColumn userTotalSpendings;
 
     // CREDIT TABLE COLUMNS
-    @FXML
-    private TableColumn creditId;
     @FXML
     private TableColumn totalMoneyAmount;
     @FXML
@@ -70,70 +86,153 @@ public class MainMenuAdminController {
     @FXML
     private TableColumn repaymentDate;
 
-    private boolean updateBudgetPlan = true;
+    // DEPOSIT TABLE COLUMNS
+    @FXML
+    private TableColumn initialMoney;
+    @FXML
+    private TableColumn currentMoney;
+    @FXML
+    private TableColumn depositInterestRate;
+    @FXML
+    private TableColumn initialDate;
+    @FXML
+    private TableColumn expirationDate;
 
     @FXML
     private ObservableList<Credit> credits = FXCollections.observableArrayList();
 
     @FXML
+    private ObservableList<Deposit> deposits = FXCollections.observableArrayList();
+
+    @FXML
+    private ObservableList<UserViewModel> users = FXCollections.observableArrayList();
+
+    @FXML
     void initialize()
     {
         loadCredits();
+        loadDeposits();
+        loadUsers();
+    }
 
-        budgetPlanTab.setOnSelectionChanged(new EventHandler<Event>() {
+    private void loadUsers() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
+
+        userLogin.setCellValueFactory(new PropertyValueFactory<Credit, String>("login"));
+
+        userTotalSpendings.setCellValueFactory(new PropertyValueFactory<Credit, String>("totalSpendings"));
+
+        clientConnection.sendMessage("DataLoaderController");
+        clientConnection.sendMessage("UsersByGroupCode");
+        clientConnection.sendMessage(clientConnection.getCurrentUser().getGroupCode());
+
+        ArrayList<UserViewModel> usersList = (ArrayList<UserViewModel>)clientConnection.readObject();
+
+        users.removeAll();
+        users.addAll(usersList);
+
+        userTable.setItems(users);
+
+        loadUserButtons();
+    }
+
+    private void loadUserButtons() {
+
+    }
+
+    private void loadDeposits() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
+
+        initialMoney.setCellValueFactory(new PropertyValueFactory<Credit, String>("initialMoney"));
+        initialMoney.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+
+        currentMoney.setCellValueFactory(new PropertyValueFactory<Credit, String>("currentMoney"));
+        currentMoney.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+
+        depositInterestRate.setCellValueFactory(new PropertyValueFactory<Credit, String>("interestRate"));
+        depositInterestRate.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+
+        initialDate.setCellValueFactory(new PropertyValueFactory<Credit, String>("initialDate"));
+        initialDate.setCellFactory(TextFieldTableCell.forTableColumn(new DateStringConverter()));
+
+        expirationDate.setCellValueFactory(new PropertyValueFactory<Credit, String>("expirationDate"));
+        expirationDate.setCellFactory(TextFieldTableCell.forTableColumn(new DateStringConverter()));
+
+        clientConnection.sendMessage("DataLoaderController");
+        clientConnection.sendMessage("DepositsByGroupCode");
+        clientConnection.sendMessage(ClientConnection.getInstance().getCurrentUser().getGroupCode());
+
+        ArrayList<Deposit> depositsList = (ArrayList<Deposit>)clientConnection.readObject();
+
+        deposits.removeAll();
+        deposits.addAll(depositsList);
+
+        depositTable.setItems(deposits);
+        depositTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        depositTable.setEditable(true);
+
+        loadDepositButtons();
+    }
+
+    private void loadDepositButtons() {
+        addNewDepositButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(Event event) {
-                if(!updateBudgetPlan) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
+            public void handle(ActionEvent actionEvent) {
+                PageManager.goToPage("add_deposit.fxml");
+            }
+        });
 
-                    alert.setTitle("LSDASD");
-                    alert.showAndWait();
-                    updateBudgetPlan = true;
+        saveChangesDepositButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ClientConnection connection = ClientConnection.getInstance();
+                ObservableList<Deposit> deposits = FXCollections.observableArrayList(depositTable.getItems());
+
+                ArrayList<Deposit> depositsList = new ArrayList<>();
+
+                for(Deposit deposit : deposits) {
+                    Deposit item = new Deposit(deposit);
+                    depositsList.add(item);
                 }
-                else
-                {
-                    updateBudgetPlan = false;
-                }
+
+                connection.sendMessage("DataChangerController");
+                connection.sendMessage("UpdateDeposits");
+                connection.sendObject(depositsList);
+            }
+        });
+
+        deleteDepositButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ObservableList<Deposit> allDeposits = depositTable.getItems();
+                ObservableList<Deposit> selectedDeposits = depositTable.getSelectionModel().getSelectedItems();
+
+                Deposit depositToDelete = selectedDeposits.get(0);
+
+                allDeposits.remove(depositToDelete);
+
+                ClientConnection clientConnection = ClientConnection.getInstance();
+                clientConnection.sendMessage("DeleteDataController");
+                clientConnection.sendMessage("DeleteDeposit");
+                clientConnection.sendObject(depositToDelete);
+            }
+        });
+
+        updateDepositsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ClientConnection clientConnection = ClientConnection.getInstance();
+                clientConnection.sendMessage("DataLoaderController");
+                clientConnection.sendMessage("DepositsByGroupCode");
+                clientConnection.sendMessage(clientConnection.getCurrentUser().getGroupCode());
+
+                ArrayList<Deposit> depositsList = (ArrayList<Deposit>)clientConnection.readObject();
+                deposits.setAll(depositsList);
+                depositTable.setItems(deposits);
             }
         });
     }
 
-    private void loadCredits() {
-        ClientConnection clientConnection = ClientConnection.getInstance();
-
-        totalMoneyAmount.setCellValueFactory(new PropertyValueFactory<Credit, String>("totalMoneyAmount"));
-        totalMoneyAmount.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-
-        remainingAmount.setCellValueFactory(new PropertyValueFactory<Credit, String>("remainingAmount"));
-        remainingAmount.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-
-        interestRate.setCellValueFactory(new PropertyValueFactory<Credit, String>("interestRate"));
-        interestRate.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-
-        loanDate.setCellValueFactory(new PropertyValueFactory<Credit, String>("loanDate"));
-        loanDate.setCellFactory(TextFieldTableCell.forTableColumn(new DateStringConverter()));
-
-        repaymentDate.setCellValueFactory(new PropertyValueFactory<Credit, String>("repaymentDate"));
-        repaymentDate.setCellFactory(TextFieldTableCell.forTableColumn(new DateStringConverter()));
-
-        creditId.setCellValueFactory(new PropertyValueFactory<Credit, String>("id"));
-
-        clientConnection.sendMessage("DataLoaderController");
-        clientConnection.sendMessage("CreditsByGroupCode");
-        clientConnection.sendMessage(ClientConnection.getInstance().getCurrentUser().getGroupCode());
-
-        ArrayList<Credit> creditsList = (ArrayList<Credit>)clientConnection.readObject();
-
-        credits.removeAll();
-        credits.addAll(creditsList);
-
-        creditTable.setItems(credits);
-        creditTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        creditTable.setEditable(true);
-
-        loadCreditsButtons();
-
-    }
 
     public void editTotalMoneyAmount(TableColumn.CellEditEvent cellEditEvent) {
         double value = (double)cellEditEvent.getNewValue();
@@ -185,6 +284,40 @@ public class MainMenuAdminController {
         credit.setRepaymentDate(newDate);
     }
 
+    private void loadCredits() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
+
+        totalMoneyAmount.setCellValueFactory(new PropertyValueFactory<Credit, String>("totalMoneyAmount"));
+        totalMoneyAmount.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+
+        remainingAmount.setCellValueFactory(new PropertyValueFactory<Credit, String>("remainingAmount"));
+        remainingAmount.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+
+        interestRate.setCellValueFactory(new PropertyValueFactory<Credit, String>("interestRate"));
+        interestRate.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+
+        loanDate.setCellValueFactory(new PropertyValueFactory<Credit, String>("loanDate"));
+        loanDate.setCellFactory(TextFieldTableCell.forTableColumn(new DateStringConverter()));
+
+        repaymentDate.setCellValueFactory(new PropertyValueFactory<Credit, String>("repaymentDate"));
+        repaymentDate.setCellFactory(TextFieldTableCell.forTableColumn(new DateStringConverter()));
+
+        clientConnection.sendMessage("DataLoaderController");
+        clientConnection.sendMessage("CreditsByGroupCode");
+        clientConnection.sendMessage(ClientConnection.getInstance().getCurrentUser().getGroupCode());
+
+        ArrayList<Credit> creditsList = (ArrayList<Credit>)clientConnection.readObject();
+
+        credits.removeAll();
+        credits.addAll(creditsList);
+
+        creditTable.setItems(credits);
+        creditTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        creditTable.setEditable(true);
+
+        loadCreditsButtons();
+    }
+
     private boolean doubleIsNegative(double value)
     {
         if (value < 0)
@@ -231,16 +364,17 @@ public class MainMenuAdminController {
             public void handle(ActionEvent actionEvent) {
                 ObservableList<Credit> allCredits = creditTable.getItems();
                 ObservableList<Credit> selectedCredits = creditTable.getSelectionModel().getSelectedItems();
+
+                Credit creditToDelete = selectedCredits.get(0);
+
                 for (Credit credit:selectedCredits ) {
                     allCredits.remove(credit);
                 }
 
-                Credit credit = selectedCredits.get(0);
-
                 ClientConnection clientConnection = ClientConnection.getInstance();
                 clientConnection.sendMessage("DeleteDataController");
                 clientConnection.sendMessage("DeleteCredit");
-                clientConnection.sendObject(credit);
+                clientConnection.sendObject(creditToDelete);
             }
         });
 
@@ -257,5 +391,49 @@ public class MainMenuAdminController {
                 creditTable.setItems(credits);
             }
         });
+    }
+
+    public void editInterestRateDeposit(TableColumn.CellEditEvent cellEditEvent) {
+        double value = (double)cellEditEvent.getNewValue();
+        if (doubleIsNegative(value))
+        {
+            return;
+        }
+        Deposit deposit = depositTable.getSelectionModel().getSelectedItem();
+        deposit.setInterestRate(value);
+    }
+
+    public void editInitialSumDeposit(TableColumn.CellEditEvent cellEditEvent) {
+        double value = (double)cellEditEvent.getNewValue();
+        if (doubleIsNegative(value))
+        {
+            return;
+        }
+        Deposit deposit = depositTable.getSelectionModel().getSelectedItem();
+        deposit.setInitialMoney(value);
+    }
+
+    public void editCurrentSumDeposit(TableColumn.CellEditEvent cellEditEvent) {
+        double value = (double)cellEditEvent.getNewValue();
+        if (doubleIsNegative(value))
+        {
+            return;
+        }
+        Deposit deposit = depositTable.getSelectionModel().getSelectedItem();
+        deposit.setCurrentMoney(value);
+    }
+
+    public void editInitialDate(TableColumn.CellEditEvent cellEditEvent) {
+        Deposit deposit = depositTable.getSelectionModel().getSelectedItem();
+        java.util.Date date = (java.util.Date) cellEditEvent.getNewValue();
+        java.sql.Date newDate = new Date(date.getTime());
+        deposit.setInitialDate(newDate);
+    }
+
+    public void editExpirationDate(TableColumn.CellEditEvent cellEditEvent) {
+        Deposit deposit = depositTable.getSelectionModel().getSelectedItem();
+        java.util.Date date = (java.util.Date) cellEditEvent.getNewValue();
+        java.sql.Date newDate = new Date(date.getTime());
+        deposit.setExpirationDate(newDate);
     }
 }

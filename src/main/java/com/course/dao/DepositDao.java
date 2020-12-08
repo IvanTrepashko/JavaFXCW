@@ -12,15 +12,15 @@ public class DepositDao {
     private static String username = "admin";
     private static String password = "admin";
 
-    public static ArrayList<Deposit> select(int id)
+    public static ArrayList<Deposit> select(String groupCode)
     {
         ArrayList<Deposit> deposits = new ArrayList<Deposit>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
-                String sql = "SELECT * FROM deposit WHERE id = ?";
+                String sql = "SELECT * FROM deposit WHERE groupCode = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setInt(1,id);
+                preparedStatement.setString(1,groupCode);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 ParseResultSet(deposits, resultSet);
             }
@@ -73,9 +73,9 @@ public class DepositDao {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
 
-                String sql = "UPDATE deposit SET  initialMoney = ?, currentMoney = ?, interestRate = ?, capitalizationType = ?, initialDate = ?, expirationDate = ?, groupCode = ? WHERE id = ?";
+                String sql = "UPDATE deposit SET  initialMoney = ?, currentMoney = ?, interestRate = ?, initialDate = ?, expirationDate = ?, groupCode = ? WHERE id = ?";
                 PreparedStatement preparedStatement = SetQueryValues(deposit, conn, sql);
-                preparedStatement.setInt(8,deposit.getId());
+                preparedStatement.setInt(7,deposit.getId());
                 preparedStatement.executeUpdate();
             }
         }
@@ -109,10 +109,9 @@ public class DepositDao {
         preparedStatement.setDouble(1, deposit.getInitialMoney());
         preparedStatement.setDouble(2, deposit.getCurrentMoney());
         preparedStatement.setDouble(3, deposit.getInterestRate());
-        preparedStatement.setInt(4, deposit.getCapitalizationType().ordinal());
-        preparedStatement.setDate(5, deposit.getInitialDate());
-        preparedStatement.setDate(6, deposit.getExpirationDate());
-        preparedStatement.setString(7, deposit.getGroupId());
+        preparedStatement.setDate(4, deposit.getInitialDate());
+        preparedStatement.setDate(5, deposit.getExpirationDate());
+        preparedStatement.setString(6, deposit.getGroupId());
 
         return  preparedStatement;
     }
@@ -123,11 +122,10 @@ public class DepositDao {
             double initialMoney = resultSet.getDouble(2);
             double currentMoney = resultSet.getDouble(3);
             double interestRate = resultSet.getDouble(4);
-            CapitalizationType capitalizationType = CapitalizationType.valueOf(resultSet.getInt((5)));
-            Date initialDate = resultSet.getDate(6);
-            Date expirationDate = resultSet.getDate(7);
-            String groupCode = resultSet.getString(8);
-            Deposit deposit = new Deposit(depositId, initialMoney, currentMoney, interestRate, capitalizationType, initialDate, expirationDate, groupCode);
+            Date initialDate = resultSet.getDate(5);
+            Date expirationDate = resultSet.getDate(6);
+            String groupCode = resultSet.getString(7);
+            Deposit deposit = new Deposit(depositId, initialMoney, currentMoney, interestRate, initialDate, expirationDate, groupCode);
             deposits.add(deposit);
         }
     }

@@ -1,7 +1,9 @@
 package com.course.server.controller;
 
 import com.course.dao.CreditDao;
+import com.course.dao.DepositDao;
 import com.course.entity.Credit;
+import com.course.entity.Deposit;
 import javafx.collections.ObservableList;
 
 import java.io.IOException;
@@ -20,6 +22,14 @@ public class DataChangerController {
                     ArrayList<Credit> credits = (ArrayList<Credit>) sois.readObject();
                     for(Credit credit : credits) {
                         CreditDao.update(credit);
+                    }
+                    break;
+                }
+                case "UpdateDeposits":
+                {
+                    ArrayList<Deposit> deposits = (ArrayList<Deposit>) sois.readObject();
+                    for(Deposit deposit : deposits) {
+                        DepositDao.update(deposit);
                     }
                     break;
                 }

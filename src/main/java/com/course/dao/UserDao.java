@@ -35,6 +35,23 @@ public class UserDao {
         }
     }
 
+    public static ArrayList<User> select(String groupCode) {
+        ArrayList<User> users = new ArrayList<User>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String sql = "SELECT * FROM user WHERE groupCode = ?";
+                PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setString(1, groupCode);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                ParseResultSet(users, resultSet);
+            }
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return users;
+    }
+
     public static boolean userExists(UserModel user)
     {
         ArrayList<User> users = new ArrayList<User>();

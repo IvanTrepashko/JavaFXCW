@@ -1,7 +1,9 @@
 package com.course.server.controller;
 
 import com.course.dao.CreditDao;
+import com.course.dao.DepositDao;
 import com.course.entity.Credit;
+import com.course.entity.Deposit;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,6 +16,12 @@ public class InsertDataController {
                 case "InsertCredit": {
                     Credit credit = (Credit)sois.readObject();
                     CreditDao.insert(credit);
+                    break;
+                }
+                case "InsertDeposit": {
+                    Deposit deposit = (Deposit)sois.readObject();
+                    DepositDao.insert(deposit);
+                    break;
                 }
             }
         }

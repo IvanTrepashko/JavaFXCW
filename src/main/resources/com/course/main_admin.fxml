@@ -39,7 +39,6 @@
                      <children>
                         <TableView fx:id="creditTable" editable="true" layoutX="8.0" layoutY="14.0" prefHeight="291.0" prefWidth="554.0">
                            <columns>
-                              <TableColumn fx:id="creditId" prefWidth="43.0" text="id" />
                               <TableColumn fx:id="totalMoneyAmount" onEditCommit="#editTotalMoneyAmount" prefWidth="110.0" text="Общая сумма" />
                               <TableColumn fx:id="remainingAmount" onEditCommit="#editRemainingMoney" prefWidth="92.0" text="Остаток" />
                               <TableColumn fx:id="interestRate" onEditCommit="#editInterestRate" prefWidth="71.0" text="Процент" />
@@ -58,18 +57,19 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView layoutX="6.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
+                        <TableView fx:id="depositTable" layoutX="6.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
                           <columns>
-                            <TableColumn prefWidth="30.0" text="id" />
-                            <TableColumn prefWidth="109.0" text="Начальная сумма" />
-                              <TableColumn prefWidth="100.0" text="Текущая сумма" />
-                              <TableColumn prefWidth="59.0" text="Процент" />
-                              <TableColumn prefWidth="100.0" text="Капитализация" />
-                              <TableColumn prefWidth="82.0" text="Дата начала" />
-                              <TableColumn text="Дата окончания" />
+                            <TableColumn fx:id="initialMoney" onEditCommit="#editInitialSumDeposit" prefWidth="127.0" text="Начальная сумма" />
+                              <TableColumn fx:id="currentMoney" onEditCommit="#editCurrentSumDeposit" prefWidth="109.0" text="Текущая сумма" />
+                              <TableColumn fx:id="depositInterestRate" onEditCommit="#editInterestRateDeposit" prefWidth="71.0" text="Процент" />
+                              <TableColumn fx:id="initialDate" onEditCommit="#editInitialDate" prefWidth="133.0" text="Дата начала" />
+                              <TableColumn fx:id="expirationDate" onEditCommit="#editExpirationDate" prefWidth="120.0" text="Дата окончания" />
                           </columns>
                         </TableView>
-                        <Button layoutX="6.0" layoutY="315.0" mnemonicParsing="false" text="Добавить новый депозит" />
+                        <Button fx:id="addNewDepositButton" layoutX="6.0" layoutY="315.0" mnemonicParsing="false" text="Добавить новый депозит" />
+                        <Button fx:id="saveChangesDepositButton" layoutX="169.0" layoutY="315.0" mnemonicParsing="false" text="Сохранить изменения" />
+                        <Button fx:id="deleteDepositButton" layoutX="315.0" layoutY="315.0" mnemonicParsing="false" text="Удалить выбранный" />
+                        <Button fx:id="updateDepositsButton" layoutX="452.0" layoutY="315.0" mnemonicParsing="false" text="Обновить данные" />
                      </children></AnchorPane>
               </content>
             </Tab>
@@ -77,14 +77,13 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView layoutX="4.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
+                        <TableView fx:id="userTable" layoutX="4.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
                            <columns>
-                              <TableColumn prefWidth="73.0" text="id" />
-                              <TableColumn prefWidth="221.0" text="Логин" />
-                              <TableColumn prefWidth="266.0" text="Сумма затрат" />
+                              <TableColumn fx:id="userLogin" prefWidth="221.0" text="Логин" />
+                              <TableColumn fx:id="userTotalSpendings" prefWidth="266.0" text="Сумма затрат" />
                            </columns>
                         </TableView>
-                        <Button layoutX="4.0" layoutY="316.0" mnemonicParsing="false" text="Добавить пользователя" />
+                        <Button fx:id="addNewUserButton" layoutX="4.0" layoutY="316.0" mnemonicParsing="false" text="Добавить пользователя" />
                         <TextField editable="false" layoutX="455.0" layoutY="316.0" prefHeight="25.0" prefWidth="100.0" />
                         <Text layoutX="380.0" layoutY="333.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Код доступа" />
                      </children></AnchorPane>
