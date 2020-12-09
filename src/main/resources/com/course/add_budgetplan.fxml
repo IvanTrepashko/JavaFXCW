@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.course.client.controller.AddBudgetPlanController">
+   <children>
+      <Label layoutX="199.0" layoutY="14.0" text="Создание нового бюджетного плана" />
+      <TextField fx:id="foodField" layoutX="272.0" layoutY="54.0" prefHeight="25.0" prefWidth="56.0" />
+      <TextField fx:id="hcsField" layoutX="273.0" layoutY="88.0" prefHeight="25.0" prefWidth="56.0" />
+      <TextField fx:id="transportField" layoutX="272.0" layoutY="121.0" prefHeight="25.0" prefWidth="56.0" />
+      <TextField fx:id="entertainmentField" layoutX="272.0" layoutY="156.0" prefHeight="25.0" prefWidth="56.0" />
+      <TextField fx:id="creditField" layoutX="273.0" layoutY="188.0" prefHeight="25.0" prefWidth="56.0" />
+      <TextField fx:id="fuelField" layoutX="272.0" layoutY="220.0" prefHeight="25.0" prefWidth="56.0" />
+      <TextField fx:id="subsField" layoutX="272.0" layoutY="254.0" prefHeight="25.0" prefWidth="56.0" />
+      <TextField fx:id="clothesField" layoutX="272.0" layoutY="288.0" prefHeight="25.0" prefWidth="56.0" />
+      <TextField fx:id="otherField" layoutX="273.0" layoutY="319.0" prefHeight="25.0" prefWidth="56.0" />
+      <Text layoutX="190.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Еда" />
+      <Text layoutX="190.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ЖКХ" />
+      <Text layoutX="190.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Транспорт" />
+      <Text layoutX="190.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Развлечения" />
+      <Text layoutX="190.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Кредиты" />
+      <Text layoutX="190.0" layoutY="237.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Топливо" />
+      <Text layoutX="190.0" layoutY="271.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Подписки" />
+      <Text layoutX="191.0" layoutY="305.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Одежда" />
+      <Text layoutX="191.0" layoutY="336.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Другое" />
+      <Button fx:id="addNewBudgetButton" layoutX="437.0" layoutY="354.0" mnemonicParsing="false" text="Добавить" />
+      <DatePicker fx:id="expirationField" layoutX="272.0" layoutY="354.0" prefHeight="25.0" prefWidth="116.0" />
+      <Text layoutX="191.0" layoutY="358.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата окончания" wrappingWidth="76.51171875" />
+   </children>
+</AnchorPane>

@@ -1,53 +1,52 @@
 package com.course.entity;
 
+import com.course.client.viewmodel.BudgetSpendingViewModel;
+import com.course.client.viewmodel.SpendingViewModel;
+
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 
-public class BudgetPlan {
+public class BudgetPlan implements Serializable {
     private int id;
-    private ArrayList<Spending> spendings;
+    private ArrayList<BudgetSpendingViewModel> budgetSpendings;
     private Date initialDate;
     private Date expirationDate;
-    private double initialMoney;
-    private double savedMoney;
-    private double totalMoneySpent;
     private String groupCode;
+    private double totalSpent;
+    private double totalPlanned;
+    private double totalSaved;
 
-    public BudgetPlan() {
-    }
-
-    public BudgetPlan(int id, Date initialDate, Date expirationDate, double initialMoney, double savedMoney, double totalMoneySpent, String groupCode) {
+    public BudgetPlan(int id, ArrayList<BudgetSpendingViewModel> budgetSpendings, Date initialDate, Date expirationDate, String groupCode) {
         this.id = id;
+        this.budgetSpendings = budgetSpendings;
         this.initialDate = initialDate;
         this.expirationDate = expirationDate;
-        this.initialMoney = initialMoney;
-        this.savedMoney = savedMoney;
-        this.totalMoneySpent = totalMoneySpent;
         this.groupCode = groupCode;
+
+        this.countTotalPlanned();
+        this.countTotalSpent();
+        this.totalSaved = this.totalPlanned - this.totalSpent;
     }
 
-    public BudgetPlan(int id, ArrayList<Spending> spendings, Date initialDate, Date expirationDate,
-                      double initialMoney, double savedMoney, double totalMoneySpent, String groupCode) {
-        this.id = id;
-        this.spendings = spendings;
-        this.initialDate = initialDate;
-        this.expirationDate = expirationDate;
-        this.initialMoney = initialMoney;
-        this.savedMoney = savedMoney;
-        this.totalMoneySpent = totalMoneySpent;
-        this.groupCode = groupCode;
+    public double getTotalSpent() {
+        return totalSpent;
     }
 
-    public String getGroupCode() {
-        return groupCode;
+    public double getTotalPlanned() {
+        return totalPlanned;
     }
 
-    public int getId(){
+    public double getTotalSaved() {
+        return totalSaved;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public ArrayList<Spending> getSpendings() {
-        return spendings;
+    public ArrayList<BudgetSpendingViewModel> getBudgetSpendings() {
+        return budgetSpendings;
     }
 
     public Date getInitialDate() {
@@ -58,20 +57,39 @@ public class BudgetPlan {
         return expirationDate;
     }
 
-    public double getInitialMoney() {
-        return initialMoney;
+    public String getGroupCode() {
+        return groupCode;
     }
 
-    public double getSavedMoney() {
-        return savedMoney;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public double getTotalMoneySpent() {
-        return totalMoneySpent;
+    public void setBudgetSpendings(ArrayList<BudgetSpendingViewModel> budgetSpendings) {
+        this.budgetSpendings = budgetSpendings;
     }
 
-    public void setSpendings(ArrayList<Spending> spendings)
-    {
-        this.spendings = spendings;
+    public void setInitialDate(Date initialDate) {
+        this.initialDate = initialDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
+    }
+
+    private void countTotalPlanned() {
+        for (BudgetSpendingViewModel model : budgetSpendings) {
+            this.totalPlanned += model.getPlannedMoney();
+        }
+    }
+
+    private void countTotalSpent() {
+        for (BudgetSpendingViewModel model : budgetSpendings) {
+            this.totalSpent += model.getSpentMoney();
+        }
     }
 }

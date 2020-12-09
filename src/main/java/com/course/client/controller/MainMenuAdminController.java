@@ -2,8 +2,10 @@ package com.course.client.controller;
 
 import com.course.PageManager;
 import com.course.client.ClientConnection;
+import com.course.client.viewmodel.BudgetSpendingViewModel;
 import com.course.client.viewmodel.SpendingViewModel;
 import com.course.client.viewmodel.UserViewModel;
+import com.course.entity.BudgetPlan;
 import com.course.entity.Credit;
 import com.course.entity.Deposit;
 import com.course.entity.Spending;
@@ -41,6 +43,15 @@ public class MainMenuAdminController {
     public Button addNewUserButton;
     public TextField groupCode;
 
+    
+    public TextField totalSpent;
+    public TextField totalSaved;
+    public DatePicker budgetInitial;
+    public DatePicker budgetExpiration;
+
+    //BUDGET PLAN BUTTONS
+    public Button addNewBudgetPlanButton;
+
     // TABS
     @FXML
     private Tab budgetPlanTab;
@@ -67,8 +78,13 @@ public class MainMenuAdminController {
     @FXML
     private TableView<SpendingViewModel> allSpendingTable;
 
-//    @FXML
-//    private TableView<BudgetPlan> budgetPlanTable;
+    @FXML
+    private TableView<BudgetSpendingViewModel> budgetPlanTable;
+
+    //BUDGET COLUMNS
+    public TableColumn budgetCategory;
+    public TableColumn budgetPlanned;
+    public TableColumn budgetSpent;
 
     // ALL SPENDING COLUMNS
     public TableColumn allSpendingMoney;
@@ -127,13 +143,56 @@ public class MainMenuAdminController {
     private ObservableList<SpendingViewModel> allSpendings = FXCollections.observableArrayList();
 
     @FXML
+    private ObservableList<BudgetSpendingViewModel> budgetSpendings = FXCollections.observableArrayList();
+
+    @FXML
     void initialize()
     {
+        loadBudgetPlan();
         loadCredits();
         loadDeposits();
         loadUsers();
         loadSpendings();
         loadAllSpendings();
+    }
+
+    private void loadBudgetPlan() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
+
+        budgetCategory.setCellValueFactory(new PropertyValueFactory<BudgetSpendingViewModel, String>("categoryString"));
+
+        budgetPlanned.setCellValueFactory(new PropertyValueFactory<BudgetSpendingViewModel, String>("plannedMoney"));
+
+        budgetSpent.setCellValueFactory(new PropertyValueFactory<BudgetSpendingViewModel, String>("spentMoney"));
+
+        clientConnection.sendMessage("DataLoaderController");
+        clientConnection.sendMessage("BudgetPlanByGroupCode");
+        clientConnection.sendObject(clientConnection.getCurrentUser().getGroupCode());
+
+        String status = (String)clientConnection.readObject();
+        if (status.equals("SUCCESS")) {
+            BudgetPlan budgetPlan = (BudgetPlan) clientConnection.readObject();
+            ArrayList<BudgetSpendingViewModel> budgetSpending = budgetPlan.getBudgetSpendings();
+            budgetSpendings.removeAll();
+            budgetSpendings.addAll(budgetSpending);
+            budgetPlanTable.setItems(budgetSpendings);
+
+            totalSaved.setText(Double.toString(budgetPlan.getTotalSaved()));
+            totalSpent.setText(Double.toString(budgetPlan.getTotalSpent()));
+            budgetInitial.setValue(budgetPlan.getInitialDate().toLocalDate());
+            budgetExpiration.setValue(budgetPlan.getExpirationDate().toLocalDate());
+        }
+
+        loadBudgetPlanButtons();
+    }
+
+    private void loadBudgetPlanButtons() {
+        addNewBudgetPlanButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                PageManager.goToPage("add_budgetplan.fxml");
+            }
+        });
     }
 
     private void loadAllSpendings() {

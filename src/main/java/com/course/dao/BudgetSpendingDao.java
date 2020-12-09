@@ -11,25 +11,25 @@ public class BudgetSpendingDao {
     private static String username = "admin";
     private static String password = "admin";
 
-//    public static ArrayList<BudgetSpending> select(int id)
-//    {
-//        ArrayList<BudgetSpending> budgetSpendings = new ArrayList<BudgetSpending>();
-//        try {
-//            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-//            try (Connection conn = DriverManager.getConnection(url, username, password)){
-//                String sql = "SELECT * FROM spending WHERE id = ?";
-//                PreparedStatement preparedStatement = conn.prepareStatement(sql);
-//                preparedStatement.setInt(1,id);
-//                ResultSet resultSet = preparedStatement.executeQuery();
-//                ParseResultSet(budgetSpendings, resultSet);
-//            }
-//        }
-//        catch(Exception ex){
-//            System.out.println(ex);
-//        }
-//
-//        return budgetSpendings;
-//    }
+    public static ArrayList<BudgetSpending> select(int budgetPlanId)
+    {
+        ArrayList<BudgetSpending> budgetSpendings = new ArrayList<BudgetSpending>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = DriverManager.getConnection(url, username, password)){
+                String sql = "SELECT * FROM budgetspending WHERE budgetPlanId = ?";
+                PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setInt(1, budgetPlanId);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                ParseResultSet(budgetSpendings, resultSet);
+            }
+        }
+        catch(Exception ex){
+            System.out.println(ex);
+        }
+
+        return budgetSpendings;
+    }
 
     public static ArrayList<BudgetSpending> select() {
 

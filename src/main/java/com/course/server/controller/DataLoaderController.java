@@ -2,14 +2,8 @@ package com.course.server.controller;
 
 import com.course.client.viewmodel.SpendingViewModel;
 import com.course.client.viewmodel.UserViewModel;
-import com.course.dao.CreditDao;
-import com.course.dao.DepositDao;
-import com.course.dao.SpendingDao;
-import com.course.dao.UserDao;
-import com.course.entity.Credit;
-import com.course.entity.Deposit;
-import com.course.entity.Spending;
-import com.course.entity.User;
+import com.course.dao.*;
+import com.course.entity.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -62,6 +56,16 @@ public class DataLoaderController {
                     ArrayList<SpendingViewModel> spendings = SpendingDao.select(parameter);
                     soos.writeObject(spendings);
                     break;
+                }
+                case "BudgetPlanByGroupCode": {
+                    BudgetPlan budgetPlan = BudgetPlanDao.select(parameter);
+                    if (budgetPlan != null) {
+                        soos.writeObject("SUCCESS");
+                        soos.writeObject(budgetPlan);
+                    }
+                    else {
+                        soos.writeObject("ERROR");
+                    }
                 }
             }
         }

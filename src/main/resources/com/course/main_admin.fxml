@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -17,18 +18,22 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView layoutX="14.0" layoutY="14.0" prefHeight="279.0" prefWidth="375.0">
-                           <columns>
-                              <TableColumn prefWidth="106.0" text="Вид затрат" />
-                              <TableColumn prefWidth="152.0" text="Планируемые затраты" />
-                              <TableColumn minWidth="3.0" prefWidth="113.0" text="Текущие затраты" />
-                           </columns>
-                        </TableView>
-                        <Button layoutX="14.0" layoutY="302.0" mnemonicParsing="false" text="Создать новый план" />
+                        <Button fx:id="addNewBudgetPlanButton" layoutX="15.0" layoutY="309.0" mnemonicParsing="false" text="Создать новый план" />
                         <Text layoutX="401.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Всего потрачено:" wrappingWidth="71.13671875" />
                         <Text layoutX="401.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Всего сэкономлено:" wrappingWidth="81.23046875" />
-                        <TextField editable="false" layoutX="498.0" layoutY="19.0" prefHeight="25.0" prefWidth="46.0" />
-                        <TextField editable="false" layoutX="498.0" layoutY="77.0" prefHeight="25.0" prefWidth="47.0" />
+                        <TextField fx:id="totalSpent" editable="false" layoutX="498.0" layoutY="19.0" prefHeight="25.0" prefWidth="60.0" />
+                        <TextField fx:id="totalSaved" editable="false" layoutX="498.0" layoutY="77.0" prefHeight="25.0" prefWidth="60.0" />
+                        <TableView fx:id="budgetPlanTable" layoutX="14.0" layoutY="19.0" prefHeight="279.0" prefWidth="370.0">
+                           <columns>
+                              <TableColumn fx:id="budgetCategory" prefWidth="98.0" text="Категория" />
+                              <TableColumn fx:id="budgetPlanned" prefWidth="155.0" text="Запланировано" />
+                              <TableColumn fx:id="budgetSpent" prefWidth="116.0" text="Потрачено" />
+                           </columns>
+                        </TableView>
+                        <DatePicker fx:id="budgetInitial" layoutX="399.0" layoutY="146.0" prefHeight="25.0" prefWidth="147.0" />
+                        <DatePicker fx:id="budgetExpiration" layoutX="399.0" layoutY="205.0" prefHeight="25.0" prefWidth="147.0" />
+                        <Text layoutX="438.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата начала" />
+                        <Text layoutX="428.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата окончания" />
                      </children>
                   </AnchorPane>
             </content>
