@@ -1,20 +1,18 @@
 package com.course.dao;
 
-
-import com.course.entity.CapitalizationType;
 import com.course.entity.Deposit;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DepositDao {
-    private static String url = "jdbc:mysql://localhost:3306/TestDB?serverTimezone=UTC";
-    private static String username = "admin";
-    private static String password = "admin";
+    private static final String url = "jdbc:mysql://localhost:3306/TestDB?serverTimezone=UTC";
+    private static final String username = "admin";
+    private static final String password = "admin";
 
     public static ArrayList<Deposit> select(String groupCode)
     {
-        ArrayList<Deposit> deposits = new ArrayList<Deposit>();
+        ArrayList<Deposit> deposits = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
@@ -25,8 +23,8 @@ public class DepositDao {
                 ParseResultSet(deposits, resultSet);
             }
         }
-        catch(Exception ex){
-            System.out.println(ex);
+        catch(Exception ex) {
+            ex.printStackTrace();
         }
 
         return deposits;
@@ -34,7 +32,7 @@ public class DepositDao {
 
     public static ArrayList<Deposit> select() {
 
-        ArrayList<Deposit> deposits = new ArrayList<Deposit>();
+        ArrayList<Deposit> deposits = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
@@ -43,8 +41,8 @@ public class DepositDao {
                 ParseResultSet(deposits, resultSet);
             }
         }
-        catch(Exception ex){
-            System.out.println(ex);
+        catch(Exception ex) {
+            ex.printStackTrace();
         }
 
         return deposits;
@@ -62,13 +60,13 @@ public class DepositDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return 0;
     }
 
-    public static int update(Deposit deposit) {
+    public static void update(Deposit deposit) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
@@ -80,9 +78,8 @@ public class DepositDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
-        return 0;
     }
 
     public static int delete(int id) {
@@ -98,7 +95,7 @@ public class DepositDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return 0;

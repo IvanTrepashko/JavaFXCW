@@ -6,25 +6,26 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class CreditDao {
-    private static String url = "jdbc:mysql://localhost:3306/TestDB?serverTimezone=UTC";
-    private static String username = "admin";
-    private static String password = "admin";
+    private static final String url = "jdbc:mysql://localhost:3306/TestDB?serverTimezone=UTC";
+    private static final String username = "admin";
+    private static final String password = "admin";
 
     public static ArrayList<Credit> select(String groupCode)
     {
-        ArrayList<Credit> records = new ArrayList<Credit>();
+        ArrayList<Credit> records = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
                 String sql = "SELECT * FROM credit WHERE groupCode = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(sql);
                 preparedStatement.setString(1, groupCode);
-                ResultSet resultSet = preparedStatement.executeQuery();
-                ParseResultSet(records, resultSet);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    ParseResultSet(records, resultSet);
+                }
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return records;
@@ -32,7 +33,7 @@ public class CreditDao {
 
     public static ArrayList<Credit> select() {
 
-        ArrayList<Credit> records = new ArrayList<Credit>();
+        ArrayList<Credit> records = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
@@ -42,7 +43,7 @@ public class CreditDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return records;
@@ -60,13 +61,13 @@ public class CreditDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return 0;
     }
 
-    public static int update(Credit credit) {
+    public static void update(Credit credit) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
@@ -77,10 +78,9 @@ public class CreditDao {
                 preparedStatement.executeUpdate();
             }
         }
-        catch(Exception ex){
-            System.out.println(ex);
+        catch(Exception ex) {
+            ex.printStackTrace();
         }
-        return 0;
     }
 
     public static int delete(int id) {
@@ -96,7 +96,7 @@ public class CreditDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return 0;
@@ -123,7 +123,6 @@ public class CreditDao {
             Date loanDate = resultSet.getDate(5);
             Date repaymentDate = resultSet.getDate(6);
             String groupCode = resultSet.getString(7);
-            String password = resultSet.getString(3);
             Credit credit = new Credit(creditId, totalMoneyAmount, remainingMoney, interestRate, loanDate, repaymentDate, groupCode);
             credits.add(credit);
         }

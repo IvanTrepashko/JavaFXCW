@@ -12,8 +12,12 @@ public class Spending implements Serializable {
     private int userId;
     private String categoryString;
 
-    public Spending() {
-
+    public Spending(double moneyAmount, Date date, SpendingCategory category, String groupCode, int userId) {
+        this.moneyAmount = moneyAmount;
+        this.date = date;
+        this.category = category;
+        this.groupCode = groupCode;
+        this.userId = userId;
     }
 
     public Spending(int id, double moneyAmount, Date date, SpendingCategory category, String groupCode, int userId) {

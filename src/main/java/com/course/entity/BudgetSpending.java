@@ -1,6 +1,8 @@
 package com.course.entity;
 
-public class BudgetSpending {
+import java.io.Serializable;
+
+public class BudgetSpending implements Serializable {
     private int id;
     private SpendingCategory category;
     private double plannedMoney;
@@ -13,6 +15,12 @@ public class BudgetSpending {
         this.plannedMoney = plannedMoney;
         this.spentMoney = spentMoney;
         this.budgetPlanId = budgetPlanId;
+    }
+
+    public BudgetSpending(SpendingCategory category, double plannedMoney) {
+        this.category = category;
+        this.plannedMoney = plannedMoney;
+        this.spentMoney = 0;
     }
 
     public int getId() { return id; }
@@ -31,5 +39,25 @@ public class BudgetSpending {
 
     public double getSpentMoney() {
         return spentMoney;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCategory(SpendingCategory category) {
+        this.category = category;
+    }
+
+    public void setPlannedMoney(double plannedMoney) {
+        this.plannedMoney = plannedMoney;
+    }
+
+    public void setSpentMoney(double spentMoney) {
+        this.spentMoney = spentMoney;
+    }
+
+    public void setBudgetPlanId(int budgetPlanId) {
+        this.budgetPlanId = budgetPlanId;
     }
 }

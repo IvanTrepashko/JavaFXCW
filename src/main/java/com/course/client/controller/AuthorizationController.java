@@ -4,8 +4,6 @@ import com.course.PageManager;
 import com.course.client.ClientConnection;
 import com.course.entity.User;
 import com.course.model.UserModel;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -28,49 +26,48 @@ public class AuthorizationController {
     @FXML
     void initialize()
     {
-        signInButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                String pass = passwordField.getText();
-                String log = loginField.getText();
+        signInButton.setOnAction(actionEvent -> {
+            String pass = passwordField.getText();
+            String log = loginField.getText();
 
-                ClientConnection clientConnection = ClientConnection.getInstance();
-                UserModel singIn = new UserModel(log,pass);
+            ClientConnection clientConnection = ClientConnection.getInstance();
+            UserModel singIn = new UserModel(log,pass);
 
-                clientConnection.sendMessage("AuthorizationController");
-                clientConnection.sendMessage("SignIn");
-                clientConnection.sendObject(singIn);
+            clientConnection.sendMessage("AuthorizationController");
+            clientConnection.sendMessage("SignIn");
+            clientConnection.sendObject(singIn);
 
-                String status = (String)clientConnection.readObject();
-                System.out.println(status);
-                if (status.equals("FAILED"))
-                {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Ошибка авторизации");
-                    alert.setContentText("Неправильный логин или пароль. Повторите попытку.");
-                    alert.showAndWait();
+            String status = (String)clientConnection.readObject();
+            System.out.println(status);
+            if (status.equals("FAILED"))
+            {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Ошибка авторизации");
+                alert.setContentText("Неправильный логин или пароль. Повторите попытку.");
+                alert.showAndWait();
+            }
+            else {
+                User user = (User) clientConnection.readObject();
+                ClientConnection.getInstance().setCurrentUser(user);
+                passwordField.getScene().getWindow().hide();
+                if (user.isAdmin()) {
+                    PageManager.goToPage("main_admin.fxml");
                 }
                 else {
-                    User user = (User) clientConnection.readObject();
-                    ClientConnection.getInstance().setCurrentUser(user);
-                    passwordField.getScene().getWindow().hide();
-                    if (user.isAdmin()) {
-                        PageManager.goToPage("main_admin.fxml");
+                    if (user.getGroupCode() != null) {
+                        PageManager.goToPage("main_user.fxml");
                     }
                     else {
-                        PageManager.goToPage("main_user.fxml");
+                        PageManager.goToPage("set_group_code.fxml");
                     }
                 }
             }
         });
 
-        signUpButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                System.out.println("FKO");
-                signUpButton.getScene().getWindow().hide();
-                PageManager.goToPage("registration.fxml");
-            }
+        signUpButton.setOnAction(actionEvent -> {
+            System.out.println("FKO");
+            signUpButton.getScene().getWindow().hide();
+            PageManager.goToPage("registration.fxml");
         });
 
     }

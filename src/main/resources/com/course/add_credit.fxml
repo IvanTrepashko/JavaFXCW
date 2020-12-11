@@ -8,23 +8,22 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="402.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.course.client.controller.AddCreditController">
-   <children>
-      <TextField fx:id="totalMoneyAmount" layoutX="300.0" layoutY="55.0" />
-      <TextField fx:id="interestRate" layoutX="300.0" layoutY="141.0" />
-      <DatePicker fx:id="loanDate" layoutX="300.0" layoutY="183.0" />
-      <DatePicker fx:id="repaymentDate" layoutX="300.0" layoutY="226.0" />
-      <Text layoutX="167.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Сумма кредита" />
-      <Text layoutX="164.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Процент" />
-      <Text layoutX="167.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата взятия" />
-      <Text layoutX="164.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата погашения" />
-      <Button fx:id="addButton" layoutX="266.0" layoutY="283.0" mnemonicParsing="false" text="Добавить" />
-      <Label layoutX="213.0" layoutY="14.0" text="Добавление кредита">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <TextField fx:id="remainingAmount" layoutX="300.0" layoutY="98.0" />
-      <Text layoutX="167.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Сумма для погашения" />
-   </children>
+<AnchorPane prefHeight="402.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.course.client.controller.AddCreditController">
+   <TextField fx:id="totalMoneyAmount" layoutX="300.0" layoutY="55.0"/>
+   <TextField fx:id="interestRate" layoutX="300.0" layoutY="141.0"/>
+   <DatePicker fx:id="loanDate" layoutX="300.0" layoutY="183.0"/>
+   <DatePicker fx:id="repaymentDate" layoutX="300.0" layoutY="226.0"/>
+   <Text layoutX="167.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Сумма кредита"/>
+   <Text layoutX="164.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Процент"/>
+   <Text layoutX="167.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата взятия"/>
+   <Text layoutX="164.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата погашения"/>
+   <Button fx:id="addButton" layoutX="266.0" layoutY="283.0" mnemonicParsing="false" text="Добавить"/>
+   <Label layoutX="213.0" layoutY="14.0" text="Добавление кредита">
+      <font>
+         <Font size="20.0"/>
+      </font>
+   </Label>
+   <TextField fx:id="remainingAmount" layoutX="300.0" layoutY="98.0"/>
+   <Text layoutX="167.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Сумма для погашения"/>
 </AnchorPane>

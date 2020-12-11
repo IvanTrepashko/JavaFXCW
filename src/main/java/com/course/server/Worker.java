@@ -56,13 +56,9 @@ public class Worker implements Runnable {
         {
             System.out.println("Клиент отключился.");
         }
-        catch(IOException ex)
+        catch(IOException | ClassNotFoundException ex)
             {
                 ex.printStackTrace();
-            }
-        catch(ClassNotFoundException e)
-            {
-                e.printStackTrace();
             }
     }
 }

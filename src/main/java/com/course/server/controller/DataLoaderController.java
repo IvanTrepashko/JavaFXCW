@@ -69,12 +69,9 @@ public class DataLoaderController {
                 }
             }
         }
-        catch (IOException ex)
+        catch (IOException | ClassNotFoundException ex)
         {
             ex.printStackTrace();
-        }
-        catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
     }

@@ -14,10 +14,10 @@ public enum SpendingCategory {
     CLOTHES(8),
     OTHER(9);
 
-    private int value;
-    private static Map map = new HashMap<>();
+    private final int value;
+    private final static Map map = new HashMap<>();
 
-    private SpendingCategory(int value) {
+    SpendingCategory(int value) {
         this.value = value;
     }
 

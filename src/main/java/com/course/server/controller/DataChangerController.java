@@ -2,9 +2,10 @@ package com.course.server.controller;
 
 import com.course.dao.CreditDao;
 import com.course.dao.DepositDao;
+import com.course.dao.UserDao;
 import com.course.entity.Credit;
 import com.course.entity.Deposit;
-import javafx.collections.ObservableList;
+import com.course.entity.User;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,14 +34,26 @@ public class DataChangerController {
                     }
                     break;
                 }
+                case "UpdateUserGroupCode":
+                {
+                    String groupCode = (String)sois.readObject();
+                    User currentUser = (User)sois.readObject();
+
+                    User user = UserDao.selectAdmin(groupCode);
+                    if (user != null) {
+                        currentUser.setGroupCode(groupCode);
+                        UserDao.update(currentUser);
+                        soos.writeObject("SUCCESS");
+                    }
+                    else {
+                        soos.writeObject("ERROR");
+                    }
+                }
             }
         }
-        catch (IOException ex)
+        catch (IOException | ClassNotFoundException ex)
         {
             ex.printStackTrace();
-        }
-        catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
     }
 }

@@ -14,7 +14,6 @@ public class Client extends Application{
 
     @Override
     public void start(Stage stage) throws IOException {
-        ClientConnection client = ClientConnection.getInstance();
         scene = new Scene(loadFXML("authorization"));
         stage.setScene(scene);
         stage.show();

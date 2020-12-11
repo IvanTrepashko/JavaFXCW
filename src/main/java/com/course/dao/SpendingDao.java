@@ -9,13 +9,13 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class SpendingDao {
-    private static String url = "jdbc:mysql://localhost:3306/TestDB?serverTimezone=UTC";
-    private static String username = "admin";
-    private static String password = "admin";
+    private static final String url = "jdbc:mysql://localhost:3306/TestDB?serverTimezone=UTC";
+    private static final String username = "admin";
+    private static final String password = "admin";
 
     public static ArrayList<SpendingViewModel> select(String groupCode)
     {
-        ArrayList<SpendingViewModel> spendigs = new ArrayList<SpendingViewModel>();
+        ArrayList<SpendingViewModel> spendigs = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
@@ -37,14 +37,14 @@ public class SpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return spendigs;
     }
 
     public static ArrayList<Spending> select(int user_id)
     {
-        ArrayList<Spending> spendings = new ArrayList<Spending>();
+        ArrayList<Spending> spendings = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
@@ -56,7 +56,7 @@ public class SpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return spendings;
@@ -77,14 +77,14 @@ public class SpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return result;
     }
 
     public static ArrayList<Spending> select() {
 
-        ArrayList<Spending> spendings = new ArrayList<Spending>();
+        ArrayList<Spending> spendings = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
@@ -94,7 +94,7 @@ public class SpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return spendings;
@@ -112,7 +112,7 @@ public class SpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return 0;
@@ -130,7 +130,7 @@ public class SpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         return 0;
     }
@@ -148,7 +148,7 @@ public class SpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return 0;
@@ -158,7 +158,7 @@ public class SpendingDao {
         PreparedStatement preparedStatement = conn.prepareStatement(sql);
         preparedStatement.setDouble(1, spending.getMoneyAmount());
         preparedStatement.setDate(2, spending.getDate());
-        preparedStatement.setInt(3, spending.getCategory().ordinal());
+        preparedStatement.setInt(3, spending.getCategory().getValue());
         preparedStatement.setString(4, spending.getGroupCode());
         preparedStatement.setInt(5, spending.getUserId());
 

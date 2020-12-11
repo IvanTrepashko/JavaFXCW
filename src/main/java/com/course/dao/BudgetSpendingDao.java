@@ -7,13 +7,34 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class BudgetSpendingDao {
-    private static String url = "jdbc:mysql://localhost:3306/TestDB?serverTimezone=UTC";
-    private static String username = "admin";
-    private static String password = "admin";
+    private static final String url = "jdbc:mysql://localhost:3306/TestDB?serverTimezone=UTC";
+    private static final String username = "admin";
+    private static final String password = "admin";
+
+    public static BudgetSpending select(int budgetPlanId, int category)
+    {
+        ArrayList<BudgetSpending> budgetSpendings = new ArrayList<>();
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
+            try (Connection conn = DriverManager.getConnection(url, username, password)){
+                String sql = "SELECT * FROM budgetspending WHERE budgetPlanId = ? AND category = ?";
+                PreparedStatement preparedStatement = conn.prepareStatement(sql);
+                preparedStatement.setInt(1, budgetPlanId);
+                preparedStatement.setInt(2, category);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                ParseResultSet(budgetSpendings, resultSet);
+            }
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+
+        return budgetSpendings.get(0);
+    }
 
     public static ArrayList<BudgetSpending> select(int budgetPlanId)
     {
-        ArrayList<BudgetSpending> budgetSpendings = new ArrayList<BudgetSpending>();
+        ArrayList<BudgetSpending> budgetSpendings = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
@@ -25,7 +46,7 @@ public class BudgetSpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return budgetSpendings;
@@ -33,7 +54,7 @@ public class BudgetSpendingDao {
 
     public static ArrayList<BudgetSpending> select() {
 
-        ArrayList<BudgetSpending> budgetSpendings = new ArrayList<BudgetSpending>();
+        ArrayList<BudgetSpending> budgetSpendings = new ArrayList<>();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
@@ -42,8 +63,8 @@ public class BudgetSpendingDao {
                 ParseResultSet(budgetSpendings, resultSet);
             }
         }
-        catch(Exception ex){
-            System.out.println(ex);
+        catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         return budgetSpendings;
@@ -61,13 +82,13 @@ public class BudgetSpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return 0;
     }
 
-    public static int update(BudgetSpending budgetSpending) {
+    public static void update(BudgetSpending budgetSpending) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
@@ -78,10 +99,9 @@ public class BudgetSpendingDao {
                 preparedStatement.executeUpdate();
             }
         }
-        catch(Exception ex){
-            System.out.println(ex);
+        catch (Exception ex){
+            ex.printStackTrace();
         }
-        return 0;
     }
 
     public static int delete(int id) {
@@ -89,7 +109,7 @@ public class BudgetSpendingDao {
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             try (Connection conn = DriverManager.getConnection(url, username, password)){
 
-                String sql = "DELETE FROM budgetspending WHERE id = ?";
+                String sql = "DELETE FROM budgetspending WHERE budgetPlanId = ?";
                 try(PreparedStatement preparedStatement = conn.prepareStatement(sql)){
                     preparedStatement.setInt(1, id);
                     return  preparedStatement.executeUpdate();
@@ -97,7 +117,7 @@ public class BudgetSpendingDao {
             }
         }
         catch(Exception ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
 
         return 0;
@@ -105,7 +125,7 @@ public class BudgetSpendingDao {
 
     private static PreparedStatement SetQueryValues(BudgetSpending budgetSpending, Connection conn, String sql) throws SQLException {
         PreparedStatement preparedStatement = conn.prepareStatement(sql);
-        preparedStatement.setInt(1, budgetSpending.getCategory().ordinal());
+        preparedStatement.setInt(1, budgetSpending.getCategory().getValue());
         preparedStatement.setDouble(2, budgetSpending.getSpentMoney());
         preparedStatement.setDouble(3, budgetSpending.getPlannedMoney());
         preparedStatement.setInt(4, budgetSpending.getBudgetPlanId());

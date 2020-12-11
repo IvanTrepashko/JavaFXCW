@@ -99,11 +99,8 @@ public class ClientConnection {
     public void close() {
         try {
             clientSocket.close();
-            //outStream.flush();
             inStream.close();
             outStream.close();
-        } catch (EOFException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

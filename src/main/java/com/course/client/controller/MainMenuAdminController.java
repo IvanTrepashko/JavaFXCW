@@ -11,9 +11,6 @@ import com.course.entity.Deposit;
 import com.course.entity.Spending;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -40,7 +37,6 @@ public class MainMenuAdminController {
     public Button updateDepositsButton;
 
     //USER BUTTONS
-    public Button addNewUserButton;
     public TextField groupCode;
 
     
@@ -51,32 +47,30 @@ public class MainMenuAdminController {
 
     //BUDGET PLAN BUTTONS
     public Button addNewBudgetPlanButton;
+    public Button updateBudgetButton;
 
-    // TABS
-    @FXML
-    private Tab budgetPlanTab;
-    @FXML
-    private Tab creditsTab;
-    @FXML
-    private Tab depositsTab;
-    @FXML
-    private Tab usersTab;
-    @FXML
-    private Tab infoTab;
-    @FXML
-    private Tab spendingsTab;
+
+    public TextField totalSpendingAmount;
+
+    public Button addNewSpendingButton;
+
+    public Button updateMySpendingsButton;
+
+    public Button updateAllSpendingButton;
+
+    public Button updateUsersButton;
 
     // TABLES
     @FXML
-    private TableView<Credit> creditTable;
+    public TableView<Credit> creditTable;
     @FXML
-    private TableView<Deposit> depositTable;
+    public TableView<Deposit> depositTable;
     @FXML
-    private TableView<UserViewModel> userTable;
+    public TableView<UserViewModel> userTable;
     @FXML
-    private TableView<Spending> mySpendingTable;
+    public TableView<Spending> mySpendingTable;
     @FXML
-    private TableView<SpendingViewModel> allSpendingTable;
+    public TableView<SpendingViewModel> allSpendingTable;
 
     @FXML
     private TableView<BudgetSpendingViewModel> budgetPlanTable;
@@ -99,33 +93,33 @@ public class MainMenuAdminController {
 
     // USER TABLE COLUMNS
     @FXML
-    private TableColumn userLogin;
+    public TableColumn userLogin;
     @FXML
-    private TableColumn userTotalSpendings;
+    public TableColumn userTotalSpendings;
 
     // CREDIT TABLE COLUMNS
     @FXML
-    private TableColumn totalMoneyAmount;
+    public TableColumn totalMoneyAmount;
     @FXML
-    private TableColumn remainingAmount;
+    public TableColumn remainingAmount;
     @FXML
-    private TableColumn interestRate;
+    public TableColumn interestRate;
     @FXML
-    private TableColumn loanDate;
+    public TableColumn loanDate;
     @FXML
-    private TableColumn repaymentDate;
+    public TableColumn repaymentDate;
 
     // DEPOSIT TABLE COLUMNS
     @FXML
-    private TableColumn initialMoney;
+    public TableColumn initialMoney;
     @FXML
-    private TableColumn currentMoney;
+    public TableColumn currentMoney;
     @FXML
-    private TableColumn depositInterestRate;
+    public TableColumn depositInterestRate;
     @FXML
-    private TableColumn initialDate;
+    public TableColumn initialDate;
     @FXML
-    private TableColumn expirationDate;
+    public TableColumn expirationDate;
 
     @FXML
     private ObservableList<Credit> credits = FXCollections.observableArrayList();
@@ -157,46 +151,22 @@ public class MainMenuAdminController {
     }
 
     private void loadBudgetPlan() {
-        ClientConnection clientConnection = ClientConnection.getInstance();
-
         budgetCategory.setCellValueFactory(new PropertyValueFactory<BudgetSpendingViewModel, String>("categoryString"));
 
         budgetPlanned.setCellValueFactory(new PropertyValueFactory<BudgetSpendingViewModel, String>("plannedMoney"));
 
         budgetSpent.setCellValueFactory(new PropertyValueFactory<BudgetSpendingViewModel, String>("spentMoney"));
 
-        clientConnection.sendMessage("DataLoaderController");
-        clientConnection.sendMessage("BudgetPlanByGroupCode");
-        clientConnection.sendObject(clientConnection.getCurrentUser().getGroupCode());
-
-        String status = (String)clientConnection.readObject();
-        if (status.equals("SUCCESS")) {
-            BudgetPlan budgetPlan = (BudgetPlan) clientConnection.readObject();
-            ArrayList<BudgetSpendingViewModel> budgetSpending = budgetPlan.getBudgetSpendings();
-            budgetSpendings.removeAll();
-            budgetSpendings.addAll(budgetSpending);
-            budgetPlanTable.setItems(budgetSpendings);
-
-            totalSaved.setText(Double.toString(budgetPlan.getTotalSaved()));
-            totalSpent.setText(Double.toString(budgetPlan.getTotalSpent()));
-            budgetInitial.setValue(budgetPlan.getInitialDate().toLocalDate());
-            budgetExpiration.setValue(budgetPlan.getExpirationDate().toLocalDate());
-        }
-
+        updateBudgetPlan();
         loadBudgetPlanButtons();
     }
 
     private void loadBudgetPlanButtons() {
-        addNewBudgetPlanButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                PageManager.goToPage("add_budgetplan.fxml");
-            }
-        });
+        addNewBudgetPlanButton.setOnAction(actionEvent -> PageManager.goToPage("add_budgetplan.fxml"));
+        updateBudgetButton.setOnAction(actionEvent -> updateBudgetPlan());
     }
 
     private void loadAllSpendings() {
-        ClientConnection clientConnection = ClientConnection.getInstance();
 
         allSpendingMoney.setCellValueFactory(new PropertyValueFactory<SpendingViewModel, String>("totalMoneyAmount"));
 
@@ -206,55 +176,98 @@ public class MainMenuAdminController {
 
         allSpendingUserLogin.setCellValueFactory(new PropertyValueFactory<SpendingViewModel, String>("userLogin"));
 
+        ClientConnection clientConnection = ClientConnection.getInstance();
+
         clientConnection.sendMessage("DataLoaderController");
         clientConnection.sendMessage("SpendingsByGroupCode");
         clientConnection.sendObject(clientConnection.getCurrentUser().getGroupCode());
 
         ArrayList<SpendingViewModel> spendingsList = (ArrayList<SpendingViewModel>)clientConnection.readObject();
 
+        double total = 0;
+        for(SpendingViewModel spending : spendingsList)
+        {
+            total+=spending.getTotalMoneyAmount();
+        }
+
         allSpendings.removeAll();
         allSpendings.addAll(spendingsList);
         allSpendingTable.setItems(allSpendings);
 
+        totalSpendingAmount.setText(Double.toString(total));
+
         loadAllSpendingsButtons();
     }
 
-    private void loadAllSpendingsButtons() {
+    private void updateAllSpending() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
 
+        clientConnection.sendMessage("DataLoaderController");
+        clientConnection.sendMessage("SpendingsByGroupCode");
+        clientConnection.sendObject(clientConnection.getCurrentUser().getGroupCode());
+
+        ArrayList<SpendingViewModel> spendingsList = (ArrayList<SpendingViewModel>)clientConnection.readObject();
+
+        double total = 0;
+        for(SpendingViewModel spending : spendingsList)
+        {
+            total+=spending.getTotalMoneyAmount();
+        }
+
+        allSpendings = FXCollections.observableArrayList();
+        allSpendings.addAll(spendingsList);
+        allSpendingTable.setItems(allSpendings);
+
+        totalSpendingAmount.setText(Double.toString(total));
+    }
+
+    private void loadAllSpendingsButtons() {
+        updateAllSpendingButton.setOnAction(actionEvent -> updateAllSpending());
     }
 
     private void loadSpendings() {
-        ClientConnection clientConnection = ClientConnection.getInstance();
-
         mySpendingAmount.setCellValueFactory(new PropertyValueFactory<Spending, String>("moneyAmount"));
 
         mySpendingDate.setCellValueFactory(new PropertyValueFactory<Spending, String>("date"));
 
         mySpendingCategory.setCellValueFactory(new PropertyValueFactory<Spending, String>("categoryString"));
 
+        updateMySpendings();
+
+        loadMySpendingButtons();
+    }
+
+    private void updateMySpendings() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
         clientConnection.sendMessage("DataLoaderController");
         clientConnection.sendMessage("SpendingsByUserId");
         clientConnection.sendObject(clientConnection.getCurrentUser().getId());
 
         ArrayList<Spending> spendingsList = (ArrayList<Spending>)clientConnection.readObject();
 
-        spendings.removeAll();
+        spendings = FXCollections.observableArrayList();
         spendings.addAll(spendingsList);
         mySpendingTable.setItems(spendings);
-
-        loadMySpendingButtons();
     }
 
     private void loadMySpendingButtons() {
+        addNewSpendingButton.setOnAction(actionEvent -> PageManager.goToPage("add_spending.fxml"));
 
+        updateMySpendingsButton.setOnAction(actionEvent -> updateMySpendings());
     }
 
     private void loadUsers() {
-        ClientConnection clientConnection = ClientConnection.getInstance();
 
         userLogin.setCellValueFactory(new PropertyValueFactory<UserViewModel, String>("login"));
 
         userTotalSpendings.setCellValueFactory(new PropertyValueFactory<UserViewModel, String>("totalSpendings"));
+
+        updateUsers();
+        loadUserButtons();
+    }
+
+    private void updateUsers() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
 
         clientConnection.sendMessage("DataLoaderController");
         clientConnection.sendMessage("UsersByGroupCode");
@@ -262,18 +275,16 @@ public class MainMenuAdminController {
 
         ArrayList<UserViewModel> usersList = (ArrayList<UserViewModel>)clientConnection.readObject();
 
-        users.removeAll();
+        users = FXCollections.observableArrayList();
         users.addAll(usersList);
 
         userTable.setItems(users);
 
         groupCode.setText(clientConnection.getCurrentUser().getGroupCode());
-
-        loadUserButtons();
     }
 
     private void loadUserButtons() {
-
+        updateUsersButton.setOnAction(actionEvent -> updateUsers());
     }
 
     private void loadDeposits() {
@@ -311,64 +322,70 @@ public class MainMenuAdminController {
     }
 
     private void loadDepositButtons() {
-        addNewDepositButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                PageManager.goToPage("add_deposit.fxml");
+        addNewDepositButton.setOnAction(actionEvent -> PageManager.goToPage("add_deposit.fxml"));
+
+        saveChangesDepositButton.setOnAction(actionEvent -> {
+            ClientConnection connection = ClientConnection.getInstance();
+            ObservableList<Deposit> deposits = FXCollections.observableArrayList(depositTable.getItems());
+
+            ArrayList<Deposit> depositsList = new ArrayList<>();
+
+            for(Deposit deposit : deposits) {
+                Deposit item = new Deposit(deposit);
+                depositsList.add(item);
             }
+
+            connection.sendMessage("DataChangerController");
+            connection.sendMessage("UpdateDeposits");
+            connection.sendObject(depositsList);
         });
 
-        saveChangesDepositButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                ClientConnection connection = ClientConnection.getInstance();
-                ObservableList<Deposit> deposits = FXCollections.observableArrayList(depositTable.getItems());
+        deleteDepositButton.setOnAction(actionEvent -> {
+            ObservableList<Deposit> allDeposits = depositTable.getItems();
+            ObservableList<Deposit> selectedDeposits = depositTable.getSelectionModel().getSelectedItems();
 
-                ArrayList<Deposit> depositsList = new ArrayList<>();
+            Deposit depositToDelete = selectedDeposits.get(0);
 
-                for(Deposit deposit : deposits) {
-                    Deposit item = new Deposit(deposit);
-                    depositsList.add(item);
-                }
+            allDeposits.remove(depositToDelete);
 
-                connection.sendMessage("DataChangerController");
-                connection.sendMessage("UpdateDeposits");
-                connection.sendObject(depositsList);
-            }
+            ClientConnection clientConnection = ClientConnection.getInstance();
+            clientConnection.sendMessage("DeleteDataController");
+            clientConnection.sendMessage("DeleteDeposit");
+            clientConnection.sendObject(depositToDelete);
         });
 
-        deleteDepositButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                ObservableList<Deposit> allDeposits = depositTable.getItems();
-                ObservableList<Deposit> selectedDeposits = depositTable.getSelectionModel().getSelectedItems();
+        updateDepositsButton.setOnAction(actionEvent -> {
+            ClientConnection clientConnection = ClientConnection.getInstance();
+            clientConnection.sendMessage("DataLoaderController");
+            clientConnection.sendMessage("DepositsByGroupCode");
+            clientConnection.sendMessage(clientConnection.getCurrentUser().getGroupCode());
 
-                Deposit depositToDelete = selectedDeposits.get(0);
-
-                allDeposits.remove(depositToDelete);
-
-                ClientConnection clientConnection = ClientConnection.getInstance();
-                clientConnection.sendMessage("DeleteDataController");
-                clientConnection.sendMessage("DeleteDeposit");
-                clientConnection.sendObject(depositToDelete);
-            }
-        });
-
-        updateDepositsButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                ClientConnection clientConnection = ClientConnection.getInstance();
-                clientConnection.sendMessage("DataLoaderController");
-                clientConnection.sendMessage("DepositsByGroupCode");
-                clientConnection.sendMessage(clientConnection.getCurrentUser().getGroupCode());
-
-                ArrayList<Deposit> depositsList = (ArrayList<Deposit>)clientConnection.readObject();
-                deposits.setAll(depositsList);
-                depositTable.setItems(deposits);
-            }
+            ArrayList<Deposit> depositsList = (ArrayList<Deposit>)clientConnection.readObject();
+            deposits.setAll(depositsList);
+            depositTable.setItems(deposits);
         });
     }
 
+    private void updateBudgetPlan() {
+        ClientConnection clientConnection = ClientConnection.getInstance();
+        clientConnection.sendMessage("DataLoaderController");
+        clientConnection.sendMessage("BudgetPlanByGroupCode");
+        clientConnection.sendObject(clientConnection.getCurrentUser().getGroupCode());
+
+        String status = (String)clientConnection.readObject();
+        if (status.equals("SUCCESS")) {
+            BudgetPlan budgetPlan = (BudgetPlan) clientConnection.readObject();
+            ArrayList<BudgetSpendingViewModel> budgetSpending = budgetPlan.getBudgetSpendings();
+            budgetSpendings = FXCollections.observableArrayList();
+            budgetSpendings.addAll(budgetSpending);
+            budgetPlanTable.setItems(budgetSpendings);
+
+            totalSaved.setText(Double.toString(budgetPlan.getTotalSaved()));
+            totalSpent.setText(Double.toString(budgetPlan.getTotalSpent()));
+            budgetInitial.setValue(budgetPlan.getInitialDate().toLocalDate());
+            budgetExpiration.setValue(budgetPlan.getExpirationDate().toLocalDate());
+        }
+    }
 
     public void editTotalMoneyAmount(TableColumn.CellEditEvent cellEditEvent) {
         double value = (double)cellEditEvent.getNewValue();
@@ -468,64 +485,50 @@ public class MainMenuAdminController {
     }
 
     private void loadCreditsButtons() {
-        addNewCreditButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                PageManager.goToPage("add_credit.fxml");
+        addNewCreditButton.setOnAction(actionEvent -> PageManager.goToPage("add_credit.fxml"));
+
+        saveChangesCreditsButton.setOnAction(actionEvent -> {
+            System.out.println("Save changes credit.");
+            ClientConnection connection = ClientConnection.getInstance();
+            ObservableList<Credit> credits = FXCollections.observableArrayList(creditTable.getItems());
+
+            ArrayList<Credit> creditsList = new ArrayList<>();
+
+            for(Credit credit : credits) {
+                Credit item = new Credit(credit);
+                creditsList.add(item);
             }
+
+            connection.sendMessage("DataChangerController");
+            connection.sendMessage("UpdateCredits");
+            connection.sendObject(creditsList);
         });
 
-        saveChangesCreditsButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                System.out.println("Save changes credit.");
-                ClientConnection connection = ClientConnection.getInstance();
-                ObservableList<Credit> credits = FXCollections.observableArrayList(creditTable.getItems());
+        deleteCreditsButton.setOnAction(actionEvent -> {
+            ObservableList<Credit> allCredits = creditTable.getItems();
+            ObservableList<Credit> selectedCredits = creditTable.getSelectionModel().getSelectedItems();
 
-                ArrayList<Credit> creditsList = new ArrayList<>();
+            Credit creditToDelete = selectedCredits.get(0);
 
-                for(Credit credit : credits) {
-                    Credit item = new Credit(credit);
-                    creditsList.add(item);
-                }
-
-                connection.sendMessage("DataChangerController");
-                connection.sendMessage("UpdateCredits");
-                connection.sendObject(creditsList);
+            for (Credit credit:selectedCredits ) {
+                allCredits.remove(credit);
             }
+
+            ClientConnection clientConnection = ClientConnection.getInstance();
+            clientConnection.sendMessage("DeleteDataController");
+            clientConnection.sendMessage("DeleteCredit");
+            clientConnection.sendObject(creditToDelete);
         });
 
-        deleteCreditsButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                ObservableList<Credit> allCredits = creditTable.getItems();
-                ObservableList<Credit> selectedCredits = creditTable.getSelectionModel().getSelectedItems();
+        updateCreditsButton.setOnAction(actionEvent -> {
+            ClientConnection clientConnection = ClientConnection.getInstance();
+            clientConnection.sendMessage("DataLoaderController");
+            clientConnection.sendMessage("CreditsByGroupCode");
+            clientConnection.sendMessage(ClientConnection.getInstance().getCurrentUser().getGroupCode());
 
-                Credit creditToDelete = selectedCredits.get(0);
-
-                for (Credit credit:selectedCredits ) {
-                    allCredits.remove(credit);
-                }
-
-                ClientConnection clientConnection = ClientConnection.getInstance();
-                clientConnection.sendMessage("DeleteDataController");
-                clientConnection.sendMessage("DeleteCredit");
-                clientConnection.sendObject(creditToDelete);
-            }
-        });
-
-        updateCreditsButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                ClientConnection clientConnection = ClientConnection.getInstance();
-                clientConnection.sendMessage("DataLoaderController");
-                clientConnection.sendMessage("CreditsByGroupCode");
-                clientConnection.sendMessage(ClientConnection.getInstance().getCurrentUser().getGroupCode());
-
-                ArrayList<Credit> creditsList = (ArrayList<Credit>)clientConnection.readObject();
-                credits.setAll(creditsList);
-                creditTable.setItems(credits);
-            }
+            ArrayList<Credit> creditsList = (ArrayList<Credit>)clientConnection.readObject();
+            credits.setAll(creditsList);
+            creditTable.setItems(credits);
         });
     }
 

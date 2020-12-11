@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.course.client.controller.AddSpendingController">
+   <ComboBox fx:id="categoryCombobox" layoutX="270.0" layoutY="141.0" prefHeight="25.0" prefWidth="105.0"/>
+   <Text layoutX="247.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Добавление затрат"/>
+   <TextField fx:id="moneyAmount" layoutX="270.0" layoutY="101.0" prefHeight="25.0" prefWidth="105.0"/>
+   <Text layoutX="182.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Сумма"/>
+   <Text layoutX="173.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Категория"/>
+   <Button fx:id="addNewSpendingButton" layoutX="265.0" layoutY="308.0" mnemonicParsing="false" text="Добавить"/>
+</AnchorPane>

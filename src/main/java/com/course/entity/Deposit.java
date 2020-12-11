@@ -24,15 +24,6 @@ public class Deposit implements Serializable {
         }
     }
 
-    public Deposit(double initialMoney, double currentMoney, double interestRate, Date initialDate, Date expirationDate, String groupId) {
-        this.initialMoney = initialMoney;
-        this.currentMoney = currentMoney;
-        this.interestRate = interestRate;
-        this.initialDate = initialDate;
-        this.expirationDate = expirationDate;
-        this.groupId = groupId;
-    }
-
     public Deposit(Deposit that) {
         this.id = that.id;
         this.initialMoney = that.initialMoney;

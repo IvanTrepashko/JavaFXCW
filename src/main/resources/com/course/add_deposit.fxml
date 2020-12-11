@@ -9,25 +9,22 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.course.client.controller.AddDepositController">
-   <children>
-      <AnchorPane layoutY="5.0" prefHeight="402.0" prefWidth="600.0">
-         <children>
-            <TextField fx:id="initialMoney" layoutX="300.0" layoutY="108.0" />
-            <TextField fx:id="interestRate" layoutX="300.0" layoutY="141.0" />
-            <DatePicker fx:id="initialDate" layoutX="300.0" layoutY="181.0" />
-            <DatePicker fx:id="expirationDate" layoutX="300.0" layoutY="226.0" />
-            <Text layoutX="163.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Сумма депозита" />
-            <Text layoutX="164.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Процент" />
-            <Text layoutX="163.0" layoutY="198.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата создания" />
-            <Text layoutX="164.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата окончания" />
-            <Button fx:id="addButton" layoutX="266.0" layoutY="283.0" mnemonicParsing="false" text="Добавить" />
-            <Label layoutX="213.0" layoutY="14.0" text="Добавление депозита">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Label>
-         </children>
-      </AnchorPane>
-   </children>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.course.client.controller.AddDepositController">
+   <AnchorPane layoutY="5.0" prefHeight="402.0" prefWidth="600.0">
+      <TextField fx:id="initialMoney" layoutX="300.0" layoutY="108.0"/>
+      <TextField fx:id="interestRate" layoutX="300.0" layoutY="141.0"/>
+      <DatePicker fx:id="initialDate" layoutX="300.0" layoutY="181.0"/>
+      <DatePicker fx:id="expirationDate" layoutX="300.0" layoutY="226.0"/>
+      <Text layoutX="163.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Сумма депозита"/>
+      <Text layoutX="164.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Процент"/>
+      <Text layoutX="163.0" layoutY="198.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата создания"/>
+      <Text layoutX="164.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата окончания"/>
+      <Button fx:id="addButton" layoutX="266.0" layoutY="283.0" mnemonicParsing="false" text="Добавить"/>
+      <Label layoutX="213.0" layoutY="14.0" text="Добавление депозита">
+         <font>
+            <Font size="20.0"/>
+         </font>
+      </Label>
+   </AnchorPane>
 </AnchorPane>

@@ -1,14 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.course.client.controller.MainMenuUserController"
-            prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.course.client.controller.MainMenuUserController">
+   <TabPane layoutX="24.0" layoutY="24.0" prefHeight="377.0" prefWidth="569.0" tabClosingPolicy="UNAVAILABLE">
+      <Tab text="Текущий БП">
+         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            <Text layoutX="401.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Всего потрачено:"
+                  wrappingWidth="71.13671875"/>
+            <Text layoutX="401.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="Всего сэкономлено:" wrappingWidth="81.23046875"/>
+            <TextField fx:id="totalSpent" editable="false" layoutX="498.0" layoutY="19.0" prefHeight="25.0"
+                       prefWidth="60.0"/>
+            <TextField fx:id="totalSaved" editable="false" layoutX="498.0" layoutY="77.0" prefHeight="25.0"
+                       prefWidth="60.0"/>
+            <TableView fx:id="budgetPlanTable" layoutX="14.0" layoutY="19.0" prefHeight="279.0"
+                       prefWidth="370.0">
+               <columns>
+                  <TableColumn fx:id="budgetCategory" prefWidth="98.0" text="Категория"/>
+                  <TableColumn fx:id="budgetPlanned" prefWidth="155.0" text="Запланировано"/>
+                  <TableColumn fx:id="budgetSpent" prefWidth="116.0" text="Потрачено"/>
+               </columns>
+            </TableView>
+            <DatePicker fx:id="budgetInitial" editable="false" layoutX="399.0" layoutY="146.0"
+                        prefHeight="25.0" prefWidth="147.0"/>
+            <DatePicker fx:id="budgetExpiration" editable="false" layoutX="399.0" layoutY="205.0"
+                        prefHeight="25.0" prefWidth="147.0"/>
+            <Text layoutX="438.0" layoutY="134.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Дата начала"/>
+            <Text layoutX="428.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  text="Дата окончания"/>
+            <Button fx:id="updateBudgetButton" layoutX="14.0" layoutY="309.0" mnemonicParsing="false"
+                    text="Обновить данные"/>
+         </AnchorPane>
+      </Tab>
+      <Tab text="Кредиты">
+         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            <TableView fx:id="creditTable" layoutX="8.0" layoutY="14.0" prefHeight="291.0" prefWidth="554.0">
+               <columns>
+                  <TableColumn fx:id="totalMoneyAmount" prefWidth="110.0" text="Общая сумма"/>
+                  <TableColumn fx:id="remainingAmount" prefWidth="92.0" text="Остаток"/>
+                  <TableColumn fx:id="interestRate" prefWidth="71.0" text="Процент"/>
+                  <TableColumn fx:id="loanDate" prefWidth="95.0" text="Дата взятия"/>
+                  <TableColumn fx:id="repaymentDate" prefWidth="125.0" text="Дата погашения"/>
+               </columns>
+            </TableView>
+            <Button fx:id="updateCreditsButton" layoutX="14.0" layoutY="309.0" mnemonicParsing="false"
+                    text="Обновить данные"/>
+         </AnchorPane>
+      </Tab>
+      <Tab text="Депозиты">
+         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            <TableView fx:id="depositTable" layoutX="6.0" layoutY="14.0" prefHeight="295.0" prefWidth="561.0">
+               <columns>
+                  <TableColumn fx:id="initialMoney" prefWidth="127.0" text="Начальная сумма"/>
+                  <TableColumn fx:id="currentMoney" prefWidth="109.0" text="Текущая сумма"/>
+                  <TableColumn fx:id="depositInterestRate" prefWidth="71.0" text="Процент"/>
+                  <TableColumn fx:id="initialDate" prefWidth="133.0" text="Дата начала"/>
+                  <TableColumn fx:id="expirationDate" prefWidth="120.0" text="Дата окончания"/>
+               </columns>
+            </TableView>
+            <Button fx:id="updateDepositsButton" layoutX="14.0" layoutY="315.0" mnemonicParsing="false"
+                    text="Обновить данные"/>
+         </AnchorPane>
+      </Tab>
+      <Tab text="Мои затраты">
+         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+            <TableView fx:id="mySpendingTable" layoutX="4.0" layoutY="14.0" prefHeight="295.0"
+                       prefWidth="561.0">
+               <columns>
+                  <TableColumn fx:id="mySpendingAmount" prefWidth="194.0" text="Сумма"/>
+                  <TableColumn fx:id="mySpendingDate" prefWidth="143.0" text="Дата"/>
+                  <TableColumn fx:id="mySpendingCategory" prefWidth="143.0" text="Категория"/>
+               </columns>
+            </TableView>
+            <Button fx:id="addNewSpendingButton" layoutX="4.0" layoutY="315.0" mnemonicParsing="false"
+                    text="Добавить "/>
+            <Button fx:id="updateMySpendingsButton" layoutX="94.0" layoutY="315.0" mnemonicParsing="false"
+                    text="Обновить данные"/>
+         </AnchorPane>
+      </Tab>
+   </TabPane>
 </AnchorPane>

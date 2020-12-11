@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class UserModel implements Serializable {
 
-    private String login;
-    private String password;
+    private final String login;
+    private final String password;
     private boolean isAdmin;
 
     public UserModel(String login, String password) {

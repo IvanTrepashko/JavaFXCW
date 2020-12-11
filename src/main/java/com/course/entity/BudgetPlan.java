@@ -1,8 +1,6 @@
 package com.course.entity;
 
 import com.course.client.viewmodel.BudgetSpendingViewModel;
-import com.course.client.viewmodel.SpendingViewModel;
-
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -27,6 +25,12 @@ public class BudgetPlan implements Serializable {
         this.countTotalPlanned();
         this.countTotalSpent();
         this.totalSaved = this.totalPlanned - this.totalSpent;
+    }
+
+    public BudgetPlan(Date initialDate, Date expirationDate, String groupCode) {
+        this.initialDate = initialDate;
+        this.expirationDate = expirationDate;
+        this.groupCode = groupCode;
     }
 
     public double getTotalSpent() {

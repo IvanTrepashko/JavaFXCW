@@ -29,13 +29,9 @@ public class AuthorizationController {
                     }
                     System.out.println(signIn.toString());
                 }
-                catch (IOException e)
+                catch (IOException | ClassNotFoundException e)
                 {
                     e.printStackTrace();
-                }
-                catch (ClassNotFoundException ex)
-                {
-                    ex.printStackTrace();
                 }
                 break;
             }
@@ -58,12 +54,8 @@ public class AuthorizationController {
                         soos.writeObject("SUCCESS");
                     }
                 }
-                catch (IOException ex) {
+                catch (IOException | ClassNotFoundException ex) {
                     ex.printStackTrace();
-                }
-                catch (ClassNotFoundException e)
-                {
-                    e.printStackTrace();
                 }
                 break;
             }
